@@ -10,6 +10,7 @@ public final class EvenArrayUtils {
     private EvenArrayUtils() {
     }
     //some text
+
     /**
      * Filters an array of integers, returning only the even numbers.
      *

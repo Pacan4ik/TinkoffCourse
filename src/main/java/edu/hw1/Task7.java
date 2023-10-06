@@ -5,22 +5,29 @@ import java.util.Collections;
 import java.util.List;
 
 public class Task7 {
+    private Task7() {
+    }
+
+    private static final int BASE = 10;
+
     private static int toBin(int n) {
         int res = 0;
         int pow = 1;
-        while (n > 0) {
-            res += (n % 2) * pow;
-            pow *= 10;
-            n /= 2;
+        int num = n;
+        while (num > 0) {
+            res += (num % 2) * pow;
+            pow *= BASE;
+            num /= 2;
         }
         return res;
     }
 
     private static List<Boolean> binToBoolList(int binNum) {
         List<Boolean> nums = new ArrayList<>();
-        while (binNum != 0) {
-            nums.add(binNum % 10 == 1);
-            binNum /= 10;
+        int remainder = binNum;
+        while (remainder != 0) {
+            nums.add(remainder % BASE == 1);
+            remainder /= BASE;
         }
         return nums;
     }
@@ -29,8 +36,8 @@ public class Task7 {
         int bin = toBin(n);
         var nums = binToBoolList(bin);
         int res = 0;
-        k %= nums.size();
-        for (int i = k, j = 0; j < nums.size(); i++, j++) {
+        int shift = k % nums.size();
+        for (int i = shift, j = 0; j < nums.size(); i++, j++) {
             if (nums.get(i % nums.size())) {
                 res += (int) Math.pow(2, j);
             }
@@ -43,8 +50,8 @@ public class Task7 {
         var nums = binToBoolList(bin);
         Collections.reverse(nums);
         int res = 0;
-        k %= nums.size();
-        for (int i = k, j = nums.size() - 1; j >= 0; i++, j--) {
+        int shift = k % nums.size();
+        for (int i = shift, j = nums.size() - 1; j >= 0; i++, j--) {
             if (nums.get(i % nums.size())) {
                 res += (int) Math.pow(2, j);
             }

@@ -1,12 +1,19 @@
 package edu.hw1;
 
 public class Task2 {
+
+    private static final int DIVIDER = 10;
+
+    private Task2() {
+    }
+
     public static int countDigits(int num) {
         int i = 0;
+        int remainder = num;
         do {
-            num /= 10;
+            remainder /= DIVIDER;
             i++;
-        } while (num != 0);
+        } while (remainder != 0);
         return i;
     }
 }

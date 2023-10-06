@@ -15,7 +15,7 @@ public final class Main {
         LOGGER.info(Task4.fixString("abcde"));
     }
 
-    public static void HelloWorld() {
+    public static void helloWorld() {
         LOGGER.info("Привет, мир!");
     }
 }
