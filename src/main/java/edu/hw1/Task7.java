@@ -21,38 +21,31 @@ final public class Task7 {
 
     }
 
-    @SuppressWarnings("MissingSwitchDefault")
     public static int rotateRight(int num, int shift) {
-        switch (inputCheck(num, shift)) {
-
-            case INCORRECTNUM:
-                return -1;
-            case NEEDSWAP:
-                return rotateLeft(num, -shift);
-            case CORRECTNUM:
-                break;
-        }
-        String binStr = Integer.toBinaryString(num);
-        int realShift = shift % binStr.length();
-        String shiftedStr =
-            binStr.substring(binStr.length() - realShift) + binStr.substring(0, binStr.length() - realShift);
-        return Integer.parseInt(shiftedStr, 2);
+        return rotate(num, shift, true);
     }
 
-    @SuppressWarnings("MissingSwitchDefault")
     public static int rotateLeft(int num, int shift) {
-        switch (inputCheck(num, shift)) {
+        return rotate(num, shift, false);
+    }
 
-            case INCORRECTNUM:
-                return -1;
-            case NEEDSWAP:
-                return rotateLeft(num, -shift);
-            case CORRECTNUM:
-                break;
+    private static int rotate(int num, int shift, boolean isRight) {
+        if (num < 0 && shift != 0) {
+            return -1;
+        }
+
+        boolean right = isRight;
+        if (shift < 0) {
+            right = !isRight;
+
         }
         String binStr = Integer.toBinaryString(num);
-        int realShift = shift % binStr.length();
-        String shiftedStr = binStr.substring(realShift) + binStr.substring(0, realShift);
+        int realShift = Math.abs(shift) % binStr.length();
+
+        String shiftedStr = right
+            ? binStr.substring(binStr.length() - realShift) + binStr.substring(0, binStr.length() - realShift)
+            : binStr.substring(realShift) + binStr.substring(0, realShift);
+
         return Integer.parseInt(shiftedStr, 2);
     }
 }
