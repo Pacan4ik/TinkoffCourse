@@ -2,7 +2,8 @@ package edu.hw1;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Task8Test {
     @Test
@@ -24,8 +25,7 @@ public class Task8Test {
         boolean res = Task8.knightBoardCapture(desk);
 
         // then
-        assertThat(res)
-            .isEqualTo(true);
+        assertTrue(res);
     }
 
     @Test
@@ -47,8 +47,7 @@ public class Task8Test {
         boolean res = Task8.knightBoardCapture(desk);
 
         // then
-        assertThat(res)
-            .isEqualTo(false);
+        assertFalse(res);
     }
 
     @Test
@@ -70,8 +69,7 @@ public class Task8Test {
         boolean res = Task8.knightBoardCapture(desk);
 
         // then
-        assertThat(res)
-            .isEqualTo(false);
+        assertFalse(res);
     }
 
     @Test
@@ -93,8 +91,7 @@ public class Task8Test {
         boolean res = Task8.knightBoardCapture(desk);
 
         // then
-        assertThat(res)
-            .isEqualTo(false);
+        assertFalse(res);
     }
 
     @Test
@@ -116,8 +113,7 @@ public class Task8Test {
         boolean res = Task8.knightBoardCapture(desk);
 
         // then
-        assertThat(res)
-            .isEqualTo(true);
+        assertTrue(res);
     }
 
     @Test
@@ -139,8 +135,7 @@ public class Task8Test {
         boolean res = Task8.knightBoardCapture(desk);
 
         // then
-        assertThat(res)
-            .isEqualTo(false);
+        assertFalse(res);
     }
 
     @Test
@@ -162,8 +157,7 @@ public class Task8Test {
         boolean res = Task8.knightBoardCapture(desk);
 
         // then
-        assertThat(res)
-            .isEqualTo(false);
+        assertFalse(res);
     }
 
     @Test
@@ -176,8 +170,7 @@ public class Task8Test {
         boolean res = Task8.knightBoardCapture(desk);
 
         // then
-        assertThat(res)
-            .isEqualTo(false);
+        assertFalse(res);
     }
 
     @Test
@@ -200,7 +193,6 @@ public class Task8Test {
         boolean res = Task8.knightBoardCapture(desk);
 
         // then
-        assertThat(res)
-            .isEqualTo(false);
+        assertFalse(res);
     }
 }
