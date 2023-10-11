@@ -1,6 +1,6 @@
 package edu.hw1;
 
-public class Task8 {
+final public class Task8 {
     private Task8() {
     }
 
@@ -20,8 +20,8 @@ public class Task8 {
         if (desk == null || desk.length != DESKSIZE) {
             return false;
         }
-        for (int i = 0; i < desk.length; i++) {
-            if (desk[i] == null || desk[i].length != DESKSIZE) {
+        for (int[] rows : desk) {
+            if (rows == null || rows.length != DESKSIZE) {
                 return false;
             }
         }

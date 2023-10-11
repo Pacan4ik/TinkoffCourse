@@ -2,16 +2,16 @@ package edu.hw1;
 
 import java.util.Arrays;
 
-public class Task6 {
+final public class Task6 {
     private Task6() {
     }
 
-    private final static int DIGITSINKAPREKARSCONST = 4;
+    private final static int KAPREKARSCONST = 6174;
+    private final static int DIGITSINKAPREKARSCONST = Task2.countDigits(KAPREKARSCONST);
     private final static int MINNUM = (int) Math.pow(10, DIGITSINKAPREKARSCONST - 1);
     private final static int MAXNUM = ((int) Math.pow(10, DIGITSINKAPREKARSCONST)) - 1;
     private final static int BASE = 10;
     private final static int[] DIGITSARR = new int[DIGITSINKAPREKARSCONST];
-    final static int KAPREKARSCONST = 6174;
 
     public static int countK(int n) {
         if (n < MINNUM || n > MAXNUM) {

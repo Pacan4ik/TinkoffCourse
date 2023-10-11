@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Task7 {
+final public class Task7 {
     private Task7() {
     }
 
@@ -33,6 +33,9 @@ public class Task7 {
     }
 
     public static int rotateRight(int n, int k) {
+        if (k < 0) {
+            return rotateLeft(n, -k);
+        }
         int bin = toBin(n);
         var nums = binToBoolList(bin);
         int res = 0;
@@ -46,6 +49,9 @@ public class Task7 {
     }
 
     public static int rotateLeft(int n, int k) {
+        if (k < 0) {
+            return rotateRight(n, -k);
+        }
         int bin = toBin(n);
         var nums = binToBoolList(bin);
         Collections.reverse(nums);

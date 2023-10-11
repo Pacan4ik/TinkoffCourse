@@ -1,6 +1,6 @@
 package edu.hw1;
 
-public class Task2 {
+final public class Task2 {
 
     private static final int DIVIDER = 10;
 

@@ -1,6 +1,6 @@
 package edu.hw1;
 
-public class Task4 {
+final public class Task4 {
     private Task4() {
     }
 

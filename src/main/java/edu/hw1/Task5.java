@@ -1,6 +1,6 @@
 package edu.hw1;
 
-public class Task5 {
+final public class Task5 {
     private Task5() {
     }
 
@@ -31,10 +31,11 @@ public class Task5 {
     }
 
     public static boolean isPalindromeDescendant(int num) {
-        if (num < MINTWODIGITSNUMBER) {
+        int possiblePal = num > 0 ? num : -num;
+        if (possiblePal < MINTWODIGITSNUMBER) {
             return false;
         }
-        String palindromeStr = Integer.toString(num > 0 ? num : -num);
+        String palindromeStr = Integer.toString(possiblePal);
         return isPalindromeDescendant(palindromeStr);
     }
 }
