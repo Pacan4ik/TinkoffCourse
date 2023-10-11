@@ -6,8 +6,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class Task8Test {
     @Test
-    @DisplayName("1.Кони на доске")
-    void knightCaptureTest() {
+    @DisplayName("Кони на доске (Task8.knightBoardCapture). Стандартный тест")
+    void knightCaptureStandartTest() {
         // given
         int[][] desk = new int[][] {
             {0, 0, 0, 1, 0, 0, 0, 0},
@@ -29,8 +29,8 @@ public class Task8Test {
     }
 
     @Test
-    @DisplayName("2.Кони на доске")
-    void knightCaptureTest2() {
+    @DisplayName("2.Кони на доске (Task8.knightBoardCapture). Стандартный тест 2")
+    void knightCaptureStandartTest2() {
         // given
         int[][] desk = new int[][] {
             {1, 0, 1, 0, 1, 0, 1, 0},
@@ -52,8 +52,8 @@ public class Task8Test {
     }
 
     @Test
-    @DisplayName("3.Кони на доске")
-    void knightCaptureTest3() {
+    @DisplayName("Кони на доске (Task8.knightBoardCapture). Стандартный тест 3")
+    void knightCaptureStandartTest3() {
         // given
         int[][] desk = new int[][] {
             {0, 0, 0, 0, 1, 0, 0, 0},
@@ -75,8 +75,8 @@ public class Task8Test {
     }
 
     @Test
-    @DisplayName("4.Кони на доске")
-    void knightCaptureTest4() {
+    @DisplayName("Кони на доске (Task8.knightBoardCapture). Два коня.")
+    void knightCaptureTwoKnightTest() {
         // given
         int[][] desk = new int[][] {
             {0, 0, 0, 0, 0, 0, 0, 0},
@@ -98,8 +98,8 @@ public class Task8Test {
     }
 
     @Test
-    @DisplayName("5.Кони на доске. Пустая доска")
-    void knightCaptureTest5() {
+    @DisplayName("Кони на доске (Task8.knightBoardCapture). Пустая доска (из 0)")
+    void knightCaptureNoKnightsTest() {
         // given
         int[][] desk = new int[][] {
             {0, 0, 0, 0, 0, 0, 0, 0},
@@ -121,8 +121,8 @@ public class Task8Test {
     }
 
     @Test
-    @DisplayName("6.Кони на доске. Массивы разной длины")
-    void knightCaptureTest6() {
+    @DisplayName("Кони на доске (Task8.knightBoardCapture). Массивы разной длины")
+    void knightCaptureDifferentLengthsArraysTest() {
         // given
         int[][] desk = new int[][] {
             {0, 0, 0, 0, 0, 0, 0, 0},
@@ -144,8 +144,8 @@ public class Task8Test {
     }
 
     @Test
-    @DisplayName("7.Кони на доске. Внутри массива null")
-    void knightCaptureTest7() {
+    @DisplayName("Кони на доске (Task8.knightBoardCapture). Внутри массива null")
+    void knightCaptureOneOfLineIsNullTest() {
         // given
         int[][] desk = new int[][] {
             {0, 0, 0, 0, 0, 0, 0, 0},
@@ -167,10 +167,34 @@ public class Task8Test {
     }
 
     @Test
-    @DisplayName("8.Кони на доске. Desk is null")
-    void knightCaptureTest8() {
+    @DisplayName("Кони на доске (Task8.knightBoardCapture). Desk is null")
+    void knightCaptureNullTest() {
         // given
         int[][] desk = null;
+
+        // when
+        boolean res = Task8.knightBoardCapture(desk);
+
+        // then
+        assertThat(res)
+            .isEqualTo(false);
+    }
+
+    @Test
+    @DisplayName("Кони на доске (Task8.knightBoardCapture). Строк больше 8")
+    void knightCaptureStrangeDeskNullTest() {
+        // given
+        int[][] desk = new int[][] {
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 1, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 1, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0}
+        };
 
         // when
         boolean res = Task8.knightBoardCapture(desk);

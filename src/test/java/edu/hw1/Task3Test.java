@@ -6,8 +6,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class Task3Test {
     @Test
-    @DisplayName("1.Вложенный массив.")
-    void nestedArrayTest() {
+    @DisplayName("Вложенный массив (Task3.isNestable). Стандартный тест")
+    void nestedArrayNestedTest() {
         // given
         int[] a1 = {1, 2, 3, 4};
         int[] a2 = {0, 6};
@@ -21,8 +21,8 @@ public class Task3Test {
     }
 
     @Test
-    @DisplayName("2.Вложенный массив")
-    void nestedArrayTest2() {
+    @DisplayName("Вложенный массив (Task3.isNestable). Cтандартный тест 2")
+    void nestedArrayNestedTest2() {
         // given
         int[] a1 = {3, 1};
         int[] a2 = {4, 0};
@@ -36,8 +36,8 @@ public class Task3Test {
     }
 
     @Test
-    @DisplayName("3.Вложенный массив")
-    void nestedArrayTest3() {
+    @DisplayName("Вложенный массив (Task3.isNestable). Стандартный тест 3. Массив не вмещается")
+    void nestedArrayNotNestedTest() {
         // given
         int[] a1 = {9, 9, 8};
         int[] a2 = {8, 9};
@@ -51,8 +51,8 @@ public class Task3Test {
     }
 
     @Test
-    @DisplayName("4.Вложенный массив")
-    void nestedArrayTest4() {
+    @DisplayName("Вложенный массив (Task3.isNestable). Стандартный тест 4. Массив не вмещается")
+    void nestedArrayNotNestedTest2() {
         // given
         int[] a1 = {1, 2, 3, 4};
         int[] a2 = {2, 3};
@@ -66,8 +66,8 @@ public class Task3Test {
     }
 
     @Test
-    @DisplayName("5.Вложенный массив. Пустой массив")
-    void nestedArrayTest5() {
+    @DisplayName("Вложенный массив (Task3.isNestable). Пустой массив")
+    void nestedArrayEmptyTest() {
         // given
         int[] a1 = {};
         int[] a2 = {2, 3};
@@ -81,10 +81,40 @@ public class Task3Test {
     }
 
     @Test
-    @DisplayName("6.Вложенный массив. Null")
-    void nestedArrayTest6() {
+    @DisplayName("Вложенный массив (Task3.isNestable). Оба массива пустые")
+    void nestedArrayBothEmptyTest() {
+        // given
+        int[] a1 = {};
+        int[] a2 = {};
+
+        // when
+        boolean isNest = Task3.isNestable(a1, a2);
+
+        // then
+        assertThat(isNest)
+            .isEqualTo(false);
+    }
+
+    @Test
+    @DisplayName("Вложенный массив (Task3.isNestable). Null")
+    void nestedArrayNullTest() {
         // given
         int[] a1 = {1};
+        int[] a2 = null;
+
+        // when
+        boolean isNest = Task3.isNestable(a1, a2);
+
+        // then
+        assertThat(isNest)
+            .isEqualTo(false);
+    }
+
+    @Test
+    @DisplayName("Вложенный массив (Task3.isNestable). Оба Null")
+    void nestedArrayBothNullTest() {
+        // given
+        int[] a1 = null;
         int[] a2 = null;
 
         // when

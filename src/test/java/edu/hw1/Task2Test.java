@@ -6,8 +6,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class Task2Test {
     @Test
-    @DisplayName("1.Количество цифр")
-    void numberOfDigitsTest() {
+    @DisplayName("Количество цифр (Task2.countDigits). Стандартный подсчёт")
+    void numberOfDigitsStandartTest() {
         // given
         int num = 4666;
 
@@ -20,8 +20,8 @@ public class Task2Test {
     }
 
     @Test
-    @DisplayName("2.Количество цифр. Отрицательное число")
-    void numberOfDigitsTest2() {
+    @DisplayName("Количество цифр (Task2.countDigits). Отрицательное число")
+    void numberOfDigitsNegativeTest() {
         // given
         int num = -544;
 
@@ -34,8 +34,8 @@ public class Task2Test {
     }
 
     @Test
-    @DisplayName("3.Количество цифр. Ноль тоже цифра")
-    void numberOfDigitsTest3() {
+    @DisplayName("Количество цифр (Task2.countDigits). Ноль тоже цифра")
+    void numberOfDigitsZeroTest() {
         // given
         int num = 0;
 

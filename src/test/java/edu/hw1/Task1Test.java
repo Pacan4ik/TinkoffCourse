@@ -6,8 +6,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class Task1Test {
     @Test
-    @DisplayName("1.Перевод в секунды")
-    void convertToSecondsTest() {
+    @DisplayName("Перевод в секунды (Task1.minutesToSeconds). Стандартный подсчёт")
+    void convertToSecondsStandartTest() {
         // given
         String time = "3:06";
 
@@ -20,8 +20,8 @@ public class Task1Test {
     }
 
     @Test
-    @DisplayName("2.Перевод в секунды. Граничное условие 0:00")
-    void convertToSecondsTest2() {
+    @DisplayName("Перевод в секунды (Task1.minutesToSeconds). Граничное условие 0:00")
+    void convertToSecondsZeroTimeTest() {
         // given
         String time = "0:00";
 
@@ -34,8 +34,8 @@ public class Task1Test {
     }
 
     @Test
-    @DisplayName("3.Перевод в секунды. Неверный формат")
-    void convertToSecondsTest3() {
+    @DisplayName("Перевод в секунды (Task1.minutesToSeconds). Неверный формат")
+    void convertToSecondsInvalidFormatTest() {
         // given
         String time = "3:60";
 
@@ -48,8 +48,8 @@ public class Task1Test {
     }
 
     @Test
-    @DisplayName("4.Перевод в секунды. Больше чем две цифры в минутах")
-    void convertToSecondsTest4() {
+    @DisplayName("Перевод в секунды (Task1.minutesToSeconds). Больше чем две цифры в минутах")
+    void convertToSecondsMoreDigitsTest() {
         // given
         String time = "333:59";
 
@@ -62,8 +62,8 @@ public class Task1Test {
     }
 
     @Test
-    @DisplayName("5.Перевод в секунды. Слишком большое кол-во минут")
-    void convertToSecondsTest5() {
+    @DisplayName("Перевод в секунды (Task1.minutesToSeconds). Слишком большое кол-во минут")
+    void convertToSecondsTooBigTest() {
         // given
         String time = Integer.MAX_VALUE + ":59";
 

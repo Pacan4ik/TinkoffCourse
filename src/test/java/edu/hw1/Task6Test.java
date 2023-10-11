@@ -6,8 +6,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class Task6Test {
     @Test
-    @DisplayName("1.Постоянная Капрекара")
-    void kaprekarsConstTest() {
+    @DisplayName("Постоянная Капрекара (Task6.countK). Стандартный тест")
+    void kaprekarsConstStandartTest() {
         // given
         int num = 3542;
 
@@ -20,8 +20,8 @@ public class Task6Test {
     }
 
     @Test
-    @DisplayName("2.Постоянная Капрекара. Отрицательное число")
-    void kaprekarsConstTest2() {
+    @DisplayName("Постоянная Капрекара (Task6.countK). Отрицательное число")
+    void kaprekarsConstNegativeTest() {
         // given
         int num = -3542;
 
@@ -34,8 +34,8 @@ public class Task6Test {
     }
 
     @Test
-    @DisplayName("3.Постоянная Капрекара. Меньше четырех цифр")
-    void kaprekarsConstTest3() {
+    @DisplayName("Постоянная Капрекара (Task6.countK). Меньше четырех цифр")
+    void kaprekarsConstLessThanFourDigitsTest() {
         // given
         int num = 2;
 
@@ -48,8 +48,8 @@ public class Task6Test {
     }
 
     @Test
-    @DisplayName("4.Постоянная Капрекара. Больше четырех цифр")
-    void kaprekarsConstTest4() {
+    @DisplayName("Постоянная Капрекара (Task6.countK). Больше четырех цифр")
+    void kaprekarsConstMoreThanFourDigitsTest() {
         // given
         int num = 25463;
 
@@ -62,8 +62,8 @@ public class Task6Test {
     }
 
     @Test
-    @DisplayName("5.Постоянная Капрекара.")
-    void kaprekarsConstTest5() {
+    @DisplayName("Постоянная Капрекара (Task6.countK). Максимальное количество шагов")
+    void kaprekarsConstMaxStepsTest() {
         // given
         int num = 5732;
 
@@ -76,8 +76,8 @@ public class Task6Test {
     }
 
     @Test
-    @DisplayName("6.Постоянная Капрекара.")
-    void kaprekarsConstTest6() {
+    @DisplayName("Постоянная Капрекара (Task6.countK). Число и есть постоянная Капрекара")
+    void kaprekarsConstAlreadyConstTest() {
         // given
         int num = 6174;
 
@@ -89,4 +89,45 @@ public class Task6Test {
             .isEqualTo(0);
     }
 
+    @Test
+    @DisplayName("Постоянная Капрекара (Task6.countK). Граничный случай 1000")
+    void kaprekarsConstThousandTest() {
+        // given
+        int num = 1000;
+
+        // when
+        int steps = Task6.countK(num);
+
+        // then
+        assertThat(steps)
+            .isEqualTo(5);
+    }
+
+    @Test
+    @DisplayName("Постоянная Капрекара (Task6.countK). Граничный случай 9999 (все цифры одинаковые)")
+    void kaprekarsConstMaxNumTest() {
+        // given
+        int num = 9999;
+
+        // when
+        int steps = Task6.countK(num);
+
+        // then
+        assertThat(steps)
+            .isEqualTo(-1);
+    }
+
+    @Test
+    @DisplayName("Постоянная Капрекара (Task6.countK). Граничный случай 9998")
+    void kaprekarsConstMaxNumThatCanBeCountedTest() {
+        // given
+        int num = 9998;
+
+        // when
+        int steps = Task6.countK(num);
+
+        // then
+        assertThat(steps)
+            .isEqualTo(5);
+    }
 }

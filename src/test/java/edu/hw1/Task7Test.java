@@ -6,8 +6,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class Task7Test {
     @Test
-    @DisplayName("1.Циклический битовый сдвиг")
-    void cyclicShiftTest() {
+    @DisplayName("Циклический битовый сдвиг(Task7.rotateLeft | Task7.rotateRight). 8 вправо на 1")
+    void cyclicShiftEightRightByOneTest() {
         // given
         int num = 8;
         int shift = 1;
@@ -21,8 +21,8 @@ public class Task7Test {
     }
 
     @Test
-    @DisplayName("2.Циклический битовый сдвиг")
-    void cyclicShiftTest2() {
+    @DisplayName("Циклический битовый сдвиг(Task7.rotateLeft | Task7.rotateRight). 16 влево на 1")
+    void cyclicShiftSixteenLeftByOneTest() {
         // given
         int num = 16;
         int shift = 1;
@@ -36,8 +36,8 @@ public class Task7Test {
     }
 
     @Test
-    @DisplayName("3.Циклический битовый сдвиг")
-    void cyclicShiftTest3() {
+    @DisplayName("Циклический битовый сдвиг(Task7.rotateLeft | Task7.rotateRight). 17 влево на 2")
+    void cyclicShiftSeventeenLeftByTwoTest() {
         // given
         int num = 17;
         int shift = 2;
@@ -51,8 +51,8 @@ public class Task7Test {
     }
 
     @Test
-    @DisplayName("4.Циклический битовый сдвиг")
-    void cyclicShiftTest4() {
+    @DisplayName("Циклический битовый сдвиг(Task7.rotateLeft | Task7.rotateRight). 8 вправо на 3")
+    void cyclicShiftEighRightByThreeTest() {
         // given
         int num = 8;
         int shift = 3;
@@ -66,8 +66,9 @@ public class Task7Test {
     }
 
     @Test
-    @DisplayName("5.Циклический битовый сдвиг")
-    void cyclicShiftTest5() {
+    @DisplayName(
+        "Циклический битовый сдвиг(Task7.rotateLeft | Task7.rotateRight). Восемь влево на 5 (больше чем полный цикл)")
+    void cyclicShiftMoreThanEntireCycleTest() {
         // given
         int num = 8;
         int shift = 5;
@@ -81,8 +82,8 @@ public class Task7Test {
     }
 
     @Test
-    @DisplayName("6.Циклический битовый сдвиг. Сдвиг на отрицательное число")
-    void cyclicShiftTest6() {
+    @DisplayName("Циклический битовый сдвиг(Task7.rotateLeft | Task7.rotateRight). Сдвиг на отрицательное число")
+    void cyclicShiftNegativeShiftTest() {
         // given
         int num = 8;
         int shift = -1;
@@ -94,9 +95,10 @@ public class Task7Test {
         assertThat(res)
             .isEqualTo(1);
     }
+
     @Test
-    @DisplayName("7.Циклический битовый сдвиг. Cдвиг на 0")
-    void cyclicShiftTest7() {
+    @DisplayName("Циклический битовый сдвиг(Task7.rotateLeft | Task7.rotateRight). Cдвиг на 0")
+    void cyclicShiftZeroShiftTest() {
         // given
         int num = 10;
         int shift = 0;
@@ -109,5 +111,33 @@ public class Task7Test {
             .isEqualTo(num);
     }
 
+    @Test
+    @DisplayName("Циклический битовый сдвиг(Task7.rotateLeft | Task7.rotateRight). Cдвиг отрицательного числа")
+    void cyclicShiftNegativeNumTest() {
+        // given
+        int num = -10;
+        int shift = 1;
 
+        // when
+        int res = Task7.rotateRight(num, shift);
+
+        // then
+        assertThat(res)
+            .isEqualTo(-1);
+    }
+
+    @Test
+    @DisplayName("Циклический битовый сдвиг(Task7.rotateLeft | Task7.rotateRight). Cдвиг отрицательного числа на 0")
+    void cyclicShiftNegativeNumShiftByZeroTest() {
+        // given
+        int num = 0;
+        int shift = 0;
+
+        // when
+        int res = Task7.rotateRight(num, shift);
+
+        // then
+        assertThat(res)
+            .isEqualTo(num);
+    }
 }

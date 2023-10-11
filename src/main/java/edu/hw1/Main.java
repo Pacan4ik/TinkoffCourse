@@ -12,7 +12,7 @@ public final class Main {
     }
 
     public static void main(String[] args) {
-        LOGGER.info(Task4.fixString("abcde"));
+
     }
 
     public static void helloWorld() {

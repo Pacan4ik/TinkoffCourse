@@ -6,8 +6,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class Task4Test {
     @Test
-    @DisplayName("1.Сломанная строка")
-    void brokenStringTest() {
+    @DisplayName("Сломанная строка (Task4.fixString). 123456 -> 214365")
+    void brokenStringNumbersInOrderTest() {
         // given
         String str = "123456";
 
@@ -20,8 +20,8 @@ public class Task4Test {
     }
 
     @Test
-    @DisplayName("2.Сломанная строка. This is a mixed up string")
-    void brokenStringTest2() {
+    @DisplayName("Сломанная строка (Task4.fixString). This is a mixed up string")
+    void brokenStringMixedUpTest() {
         // given
         String str = "hTsii  s aimex dpus rtni.g";
 
@@ -34,8 +34,8 @@ public class Task4Test {
     }
 
     @Test
-    @DisplayName("3.Сломанная строка. Нечетное кол-во знаков.")
-    void brokenStringTest3() {
+    @DisplayName("Сломанная строка (Task4.fixString). Нечетное кол-во знаков.")
+    void brokenStringOddTest() {
         // given
         String str = "badce";
 
@@ -48,8 +48,8 @@ public class Task4Test {
     }
 
     @Test
-    @DisplayName("4.Сломанная строка. Пустая строка")
-    void brokenStringTest4() {
+    @DisplayName("Сломанная строка (Task4.fixString). Пустая строка")
+    void brokenStringEmptyTest() {
         // given
         String str = "";
 

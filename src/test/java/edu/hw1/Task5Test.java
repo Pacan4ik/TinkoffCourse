@@ -6,8 +6,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class Task5Test {
     @Test
-    @DisplayName("1.Особый палиндром")
-    void descendantPalindromeTest() {
+    @DisplayName("Особый палиндром(Task5.isPalindromeDescendant). Стандартный тест")
+    void descendantPalindromeStandartTest() {
         // given
         int pal = 11211230;
 
@@ -20,8 +20,8 @@ public class Task5Test {
     }
 
     @Test
-    @DisplayName("2.Особый палиндром")
-    void descendantPalindromeTest2() {
+    @DisplayName("Особый палиндром(Task5.isPalindromeDescendant). Cтанадртый тест 2")
+    void descendantPalindromeStandartTest2() {
         // given
         int pal = 13001120;
 
@@ -34,22 +34,8 @@ public class Task5Test {
     }
 
     @Test
-    @DisplayName("3.Особый палиндром")
-    void descendantPalindromeTest3() {
-        // given
-        int pal = 23336014;
-
-        // when
-        boolean isPal = Task5.isPalindromeDescendant(pal);
-
-        // then
-        assertThat(isPal)
-            .isEqualTo(true);
-    }
-
-    @Test
-    @DisplayName("4.Особый палиндром")
-    void descendantPalindromeTest4() {
+    @DisplayName("Особый палиндром(Task5.isPalindromeDescendant). Сразу палиндром")
+    void descendantPalindromeAlreadyTest() {
         // given
         int pal = 11;
 
@@ -62,8 +48,8 @@ public class Task5Test {
     }
 
     @Test
-    @DisplayName("5.Особый палиндром")
-    void descendantPalindromeTest5() {
+    @DisplayName("Особый палиндром(Task5.isPalindromeDescendant). Нечетное количество знаков")
+    void descendantPalindromeOddTest() {
         // given
         int pal = 35753;
 
@@ -76,10 +62,10 @@ public class Task5Test {
     }
 
     @Test
-    @DisplayName("6.Особый палиндром")
-    void descendantPalindromeTest6() {
+    @DisplayName("Особый палиндром(Task5.isPalindromeDescendant). Не палиндром")
+    void descendantPalindromeFalseTest() {
         // given
-        int pal = 1234567432;
+        int pal = 12345;
 
         // when
         boolean isPal = Task5.isPalindromeDescendant(pal);

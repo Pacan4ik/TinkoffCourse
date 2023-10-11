@@ -1,67 +1,58 @@
 package edu.hw1;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 final public class Task7 {
     private Task7() {
     }
 
-    private static final int BASE = 10;
-
-    private static int toBin(int n) {
-        int res = 0;
-        int pow = 1;
-        int num = n;
-        while (num > 0) {
-            res += (num % 2) * pow;
-            pow *= BASE;
-            num /= 2;
-        }
-        return res;
+    private enum CharacteristicsInput {
+        CORRECTNUM,
+        INCORRECTNUM,
+        NEEDSWAP
     }
 
-    private static List<Boolean> binToBoolList(int binNum) {
-        List<Boolean> nums = new ArrayList<>();
-        int remainder = binNum;
-        while (remainder != 0) {
-            nums.add(remainder % BASE == 1);
-            remainder /= BASE;
+    private static CharacteristicsInput inputCheck(int num, int shift) {
+        if (num < 0 && shift != 0) {
+            return CharacteristicsInput.INCORRECTNUM;
         }
-        return nums;
+        if (shift < 0) {
+            return CharacteristicsInput.NEEDSWAP;
+        }
+        return CharacteristicsInput.CORRECTNUM;
+
     }
 
-    public static int rotateRight(int n, int k) {
-        if (k < 0) {
-            return rotateLeft(n, -k);
+    @SuppressWarnings("MissingSwitchDefault")
+    public static int rotateRight(int num, int shift) {
+        switch (inputCheck(num, shift)) {
+
+            case INCORRECTNUM:
+                return -1;
+            case NEEDSWAP:
+                return rotateLeft(num, -shift);
+            case CORRECTNUM:
+                break;
         }
-        int bin = toBin(n);
-        var nums = binToBoolList(bin);
-        int res = 0;
-        int shift = k % nums.size();
-        for (int i = shift, j = 0; j < nums.size(); i++, j++) {
-            if (nums.get(i % nums.size())) {
-                res += (int) Math.pow(2, j);
-            }
-        }
-        return res;
+        String binStr = Integer.toBinaryString(num);
+        int realShift = shift % binStr.length();
+        String shiftedStr =
+            binStr.substring(binStr.length() - realShift) + binStr.substring(0, binStr.length() - realShift);
+        return Integer.parseInt(shiftedStr, 2);
     }
 
-    public static int rotateLeft(int n, int k) {
-        if (k < 0) {
-            return rotateRight(n, -k);
+    @SuppressWarnings("MissingSwitchDefault")
+    public static int rotateLeft(int num, int shift) {
+        switch (inputCheck(num, shift)) {
+
+            case INCORRECTNUM:
+                return -1;
+            case NEEDSWAP:
+                return rotateLeft(num, -shift);
+            case CORRECTNUM:
+                break;
         }
-        int bin = toBin(n);
-        var nums = binToBoolList(bin);
-        Collections.reverse(nums);
-        int res = 0;
-        int shift = k % nums.size();
-        for (int i = shift, j = nums.size() - 1; j >= 0; i++, j--) {
-            if (nums.get(i % nums.size())) {
-                res += (int) Math.pow(2, j);
-            }
-        }
-        return res;
+        String binStr = Integer.toBinaryString(num);
+        int realShift = shift % binStr.length();
+        String shiftedStr = binStr.substring(realShift) + binStr.substring(0, realShift);
+        return Integer.parseInt(shiftedStr, 2);
     }
 }
