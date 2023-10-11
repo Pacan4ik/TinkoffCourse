@@ -6,21 +6,21 @@ final public class Task6 {
     private Task6() {
     }
 
-    private final static int KAPREKARSCONST = 6174;
-    private final static int DIGITSINKAPREKARSCONST = Task2.countDigits(KAPREKARSCONST);
-    private final static int MINNUM = (int) Math.pow(10, DIGITSINKAPREKARSCONST - 1);
-    private final static int MAXNUM = ((int) Math.pow(10, DIGITSINKAPREKARSCONST)) - 1;
-    private final static int BASE = 10;
-    private final static int[] DIGITSARR = new int[DIGITSINKAPREKARSCONST];
+    private static final int KAPREKARS_CONST = 6174;
+    private static final int DIGITS_IN_KAPREKARS_CONST = Task2.countDigits(KAPREKARS_CONST);
+    private static final int MIN_NUM = (int) Math.pow(10, DIGITS_IN_KAPREKARS_CONST - 1);
+    private static final int MAX_NUM = ((int) Math.pow(10, DIGITS_IN_KAPREKARS_CONST)) - 1;
+    private static final int BASE = 10;
+    private static final int[] DIGITS_ARR = new int[DIGITS_IN_KAPREKARS_CONST];
 
     public static int countK(int n) {
-        if (n < MINNUM || n > MAXNUM) {
+        if (n < MIN_NUM || n > MAX_NUM) {
             return -1;
         }
         int d = n;
         int digital = d % BASE;
         boolean isAllDigsTheSame = true;
-        for (int i = 0; i < DIGITSINKAPREKARSCONST - 1; i++) {
+        for (int i = 0; i < DIGITS_IN_KAPREKARS_CONST - 1; i++) {
             d /= BASE;
             if (d % BASE != digital) {
                 isAllDigsTheSame = false;
@@ -34,20 +34,20 @@ final public class Task6 {
     }
 
     private static int calculateDepth(int num, int depth) {
-        if (num == KAPREKARSCONST) {
+        if (num == KAPREKARS_CONST) {
             return depth;
         }
         int remainder = num;
-        for (int i = 0; i < DIGITSARR.length; i++) {
-            DIGITSARR[i] = remainder % BASE;
+        for (int i = 0; i < DIGITS_ARR.length; i++) {
+            DIGITS_ARR[i] = remainder % BASE;
             remainder /= BASE;
         }
-        Arrays.sort(DIGITSARR);
+        Arrays.sort(DIGITS_ARR);
         int smaller = 0;
         int bigger = 0;
-        for (int i = 0, pow = 1; i < DIGITSARR.length; i++, pow *= BASE) {
-            smaller += DIGITSARR[DIGITSARR.length - 1 - i] * pow;
-            bigger += DIGITSARR[i] * pow;
+        for (int i = 0, pow = 1; i < DIGITS_ARR.length; i++, pow *= BASE) {
+            smaller += DIGITS_ARR[DIGITS_ARR.length - 1 - i] * pow;
+            bigger += DIGITS_ARR[i] * pow;
         }
         return calculateDepth(bigger - smaller, depth + 1);
     }

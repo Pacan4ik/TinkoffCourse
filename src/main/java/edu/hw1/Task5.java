@@ -4,7 +4,7 @@ final public class Task5 {
     private Task5() {
     }
 
-    private static final int MINTWODIGITSNUMBER = 10;
+    private static final int MIN_TWO_DIGITS_NUMBER = 10;
 
     private static boolean isPalindrome(String s) {
         for (int i = 0; i < s.length() / 2; i++) {
@@ -32,7 +32,7 @@ final public class Task5 {
 
     public static boolean isPalindromeDescendant(int num) {
         int possiblePal = num > 0 ? num : -num;
-        if (possiblePal < MINTWODIGITSNUMBER) {
+        if (possiblePal < MIN_TWO_DIGITS_NUMBER) {
             return false;
         }
         String palindromeStr = Integer.toString(possiblePal);

@@ -2,7 +2,8 @@ package edu.hw1;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class Task5Test {
     @Test
@@ -15,8 +16,7 @@ public class Task5Test {
         boolean isPal = Task5.isPalindromeDescendant(pal);
 
         // then
-        assertThat(isPal)
-            .isEqualTo(true);
+        assertTrue(isPal);
     }
 
     @Test
@@ -29,8 +29,7 @@ public class Task5Test {
         boolean isPal = Task5.isPalindromeDescendant(pal);
 
         // then
-        assertThat(isPal)
-            .isEqualTo(true);
+        assertTrue(isPal);
     }
 
     @Test
@@ -43,8 +42,7 @@ public class Task5Test {
         boolean isPal = Task5.isPalindromeDescendant(pal);
 
         // then
-        assertThat(isPal)
-            .isEqualTo(true);
+        assertTrue(isPal);
     }
 
     @Test
@@ -57,8 +55,7 @@ public class Task5Test {
         boolean isPal = Task5.isPalindromeDescendant(pal);
 
         // then
-        assertThat(isPal)
-            .isEqualTo(true);
+        assertTrue(isPal);
     }
 
     @Test
@@ -71,7 +68,6 @@ public class Task5Test {
         boolean isPal = Task5.isPalindromeDescendant(pal);
 
         // then
-        assertThat(isPal)
-            .isEqualTo(false);
+        assertFalse(isPal);
     }
 }
