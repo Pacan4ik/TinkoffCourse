@@ -4,23 +4,6 @@ final public class Task7 {
     private Task7() {
     }
 
-    private enum CharacteristicsInput {
-        CORRECTNUM,
-        INCORRECTNUM,
-        NEEDSWAP
-    }
-
-    private static CharacteristicsInput inputCheck(int num, int shift) {
-        if (num < 0 && shift != 0) {
-            return CharacteristicsInput.INCORRECTNUM;
-        }
-        if (shift < 0) {
-            return CharacteristicsInput.NEEDSWAP;
-        }
-        return CharacteristicsInput.CORRECTNUM;
-
-    }
-
     public static int rotateRight(int num, int shift) {
         return rotate(num, shift, true);
     }
