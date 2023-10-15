@@ -36,7 +36,7 @@ public class Task3Test {
     }
 
     @Test
-    @DisplayName("Удаленный сервер (Task3). DefaultConnectionManager возвращает и проблемное соединение, и стабильное")
+    @DisplayName("Удаленный сервер (Task3). FaultConnectionManager возвращает только проблемное соединение")
     void FaultyCMAlwaysReturnsFaultyConnection() {
         //given
         var fcm = new FaultyConnectionManager();
