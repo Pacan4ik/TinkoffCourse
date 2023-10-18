@@ -5,6 +5,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.regex.Pattern;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @SuppressWarnings("RegexpSinglelineJava")
 class ConsoleInterface implements GameInterface {
@@ -12,6 +14,7 @@ class ConsoleInterface implements GameInterface {
     private final InputStreamReader inputStreamReader;
     private final BufferedReader bufferedReader;
 
+    private static final Logger LOGGER = LogManager.getLogger();
     private static final Pattern LETTER_PATTERN = Pattern.compile("[a-zA-zа-яА-Я]");
 
     ConsoleInterface() {
@@ -26,12 +29,12 @@ class ConsoleInterface implements GameInterface {
 
     @Override
     public void showRules() {
-        System.out.println("""
+        LOGGER.info("""
             Игра "Виселица"
             Цель - угадать слово до окончания "виселицы".
             Игрок должен вводить по одной букве, тем самым угадав слово целиком
             При угадывании слова игрок выигрывает, при достижении лимита ошибок — проигрывает.
-            /exit - если хотите сдатсья""");
+            /exit - если хотите сдатьcя""");
     }
 
     @Override
@@ -43,7 +46,7 @@ class ConsoleInterface implements GameInterface {
                 if (LETTER_PATTERN.matcher(input).matches()) {
                     return input.charAt(0);
                 }
-                System.out.println("Неккоректный ввод");
+                LOGGER.info("Неккоректный ввод");
                 input = bufferedReader.readLine();
             }
         } catch (IOException e) {
@@ -55,28 +58,29 @@ class ConsoleInterface implements GameInterface {
 
     @Override
     public void typeShadowedWord(String shadowedWord) {
-        System.out.println("Слово: " + shadowedWord);
+        LOGGER.info("Слово: " + shadowedWord);
     }
 
     @Override
     public void notifyWrongGuess(int amountMistakes, int maxMistakes) {
-        System.out.printf("Промах! Ошибка %d из %d%n", amountMistakes, maxMistakes);
+        LOGGER.info(String.format("Промах! Ошибка %d из %d%n", amountMistakes, maxMistakes));
     }
 
     @Override
     public void notifyRightGuess() {
-        System.out.println("Правильно!");
+        LOGGER.info("Правильно!");
     }
 
     @Override
     public void notifyWin() {
-        System.out.println("Вы победили!");
+        LOGGER.info("Вы победили!");
         close();
     }
 
     @Override
     public void notifyLose() {
-        System.out.println("Вы проиграли!");
+        LOGGER.info("Вы проиграли!");
+        close();
     }
 
     public void close() throws RuntimeException {
