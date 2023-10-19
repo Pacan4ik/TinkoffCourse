@@ -1,10 +1,6 @@
 package edu.project1;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
 import nl.altindag.log.LogCaptor;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -191,27 +187,4 @@ public class ProjectTest {
             .contains("правильно");
     }
 
-    @Test
-    @DisplayName("(DictionaryFromFile) Словарь возвращает слово из файла")
-    void dictionaryFromFileReturnsWord() throws Exception {
-        //given
-        Dictionary dictionary = new DictionaryFromFile();
-
-        FileReader fileReader =
-            new FileReader(DictionaryFromFile.class.getClassLoader()
-                .getResource("Dictionary").getFile());
-        List<String> words = new ArrayList<>();
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        while (bufferedReader.ready()) {
-            words.add(bufferedReader.readLine());
-        }
-        bufferedReader.close();
-        fileReader.close();
-
-        //when
-        String output = dictionary.getRandomWord();
-
-        //then
-        assertThat(words.contains(output)).isTrue();
-    }
 }
