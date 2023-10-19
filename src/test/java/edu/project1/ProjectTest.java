@@ -1,59 +1,81 @@
 package edu.project1;
 
-import com.github.stefanbirkner.systemlambda.Statement;
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
+import nl.altindag.log.LogCaptor;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import static com.github.stefanbirkner.systemlambda.SystemLambda.tapSystemOut;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ProjectTest {
 
     @Test
-    @Disabled
+    @DisplayName("(DictionaryDefault) Стандартный словарь возвращает слово")
+    void dictionaryDefault() {
+        //given
+        Dictionary dictionary = new DictionaryDefault();
+
+        //when
+        String output = dictionary.getRandomWord();
+
+        //then
+        assertFalse(output.isBlank());
+    }
+
+    @Test
     @DisplayName("(GameRunner) Игра завершается выигрышем, если слово угадано")
-    void gameIsWon() throws Exception {
+    void gameIsWon() {
         //given
         String[] words = {"слово"};
         String inputData = "с\nл\nо\nв\n";
+
         //when
-        String gameOutput = tapSystemOut(() -> GameRunner.runWithInputStream(
+        var logCaptor = LogCaptor.forClass(ConsoleInterface.class);
+        GameRunner.runWithInputStream(
             words,
             new ByteArrayInputStream(inputData.getBytes()),
             10
-        ));
+        );
+        var logs = logCaptor.getInfoLogs();
 
         //then
-        assertThat(gameOutput).contains("Вы победили!");
+        assertThat(logs.getLast().toLowerCase())
+            .isEqualTo("вы победили!");
 
     }
 
     @Test
     @Disabled
     @DisplayName("(GameRunner) Игра завершается поражением, если превышено количество попыток")
-    void gameIsLost() throws Exception {
+    void gameIsLost() {
         //given
         String[] words = {"слово"};
         String inputData = "к\nк\nк\n";
 
         //when
-        Statement statement = () -> GameRunner.runWithInputStream(
+        var logCaptor = LogCaptor.forClass(ConsoleInterface.class);
+        GameRunner.runWithInputStream(
             words,
             new ByteArrayInputStream(inputData.getBytes()),
             3
         );
-        String gameOutput = tapSystemOut(statement);
+        var logs = logCaptor.getInfoLogs();
 
         //then
-        assertThat(gameOutput).contains("Вы проиграли!");
+        assertThat(logs.getLast().toLowerCase())
+            .isEqualTo("вы проиграли");
 
     }
 
     @Test
     @DisplayName("(Game) Игра не запускается, если слово имеет неккоректную длину")
-    void gameWontStart() {
+    void gameWillNotStartIfLengthIsInCorrect() {
         //given
         String[] words = {"да"};
 
@@ -96,94 +118,100 @@ public class ProjectTest {
     }
 
     @Test
-    @Disabled
+
     @DisplayName("(ConsoleInterface) вывод слова")
-    void outputWord() throws Exception {
+    void outputWord() {
         //given
         String word = "w*rd";
 
         //when
-        String output = tapSystemOut(() -> (new ConsoleInterface()).typeShadowedWord(word));
-
+        var logCaptor = LogCaptor.forClass(ConsoleInterface.class);
+        (new ConsoleInterface()).typeShadowedWord(word);
+        var logs = logCaptor.getInfoLogs();
         //then
-        assertThat(output).contains(word);
+        assertThat(logs.getFirst())
+            .contains(word);
 
     }
 
     @Test
-    @Disabled
-    @DisplayName("(GameRunner) Отсутствует чувстивительность к регистру")
-    void notCaseSensetive() throws Exception {
+
+    @DisplayName("(GameRunner) Отсутствует чувствительность к регистру")
+    void notCaseSensitive() {
         //given
         String[] words = {"СлОво"};
         String inputData = "с\nЛ\nо\nВ\n";
 
         //when
-        Statement statement = () -> GameRunner.runWithInputStream(
+        var logCaptor = LogCaptor.forClass(ConsoleInterface.class);
+        GameRunner.runWithInputStream(
             words,
             new ByteArrayInputStream(inputData.getBytes()),
             3
         );
-        String gameOutput = tapSystemOut(statement);
+        var logs = logCaptor.getInfoLogs();
 
         //then
-        assertThat(gameOutput).contains("Вы победили!");
+        assertThat(logs.getLast().toLowerCase())
+            .contains("вы победили");
 
     }
 
     @Test
-    @DisplayName("(ConsoleInterface) буква неугадана")
-    @Disabled
-    void outputMistake() throws Exception {
+    @DisplayName("(ConsoleInterface) буква не угадана")
+    void outputMistake() {
         //given
         int mistakes = 3;
         int maxMistakes = 10;
 
         //when
-        String output = tapSystemOut(() -> (new ConsoleInterface()).notifyWrongGuess(mistakes, maxMistakes));
+        var logCaptor = LogCaptor.forClass(ConsoleInterface.class);
+        (new ConsoleInterface()).notifyWrongGuess(mistakes, maxMistakes);
+        var logs = logCaptor.getInfoLogs();
 
         //then
-        assertThat(output.toLowerCase()).contains("промах");
-        assertThat(output).contains(String.format("%d из %d", mistakes, maxMistakes));
+        assertThat(logs.getFirst().toLowerCase())
+            .contains("промах");
+        assertThat(logs.getFirst().toLowerCase())
+            .contains(String.format("%d из %d", mistakes, maxMistakes));
     }
 
     @Test
-    @Disabled
     @DisplayName("(ConsoleInterface) буква угадана")
-    void letterIsGuessed() throws Exception {
+    void letterIsGuessed() {
         //given
 
         //when
-        String output = tapSystemOut((new ConsoleInterface())::notifyRightGuess);
+        var logCaptor = LogCaptor.forClass(ConsoleInterface.class);
+        (new ConsoleInterface()).notifyRightGuess();
+        var logs = logCaptor.getInfoLogs();
 
         //then
-        assertThat(output.toLowerCase()).contains("правильно");
+        assertThat(logs.getFirst().toLowerCase())
+            .contains("правильно");
     }
 
     @Test
-    @Disabled
-    @DisplayName("(ConsoleInterface)Сообщение о победе")
-    void winMessage() throws Exception {
+    @DisplayName("(DictionaryFromFile) Словарь возвращает слово из файла")
+    void dictionaryFromFileReturnsWord() throws Exception {
         //given
+        Dictionary dictionary = new DictionaryFromFile();
+
+        FileReader fileReader =
+            new FileReader(DictionaryFromFile.class.getClassLoader()
+                .getResource("Dictionary").getFile());
+        List<String> words = new ArrayList<>();
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        while (bufferedReader.ready()) {
+            words.add(bufferedReader.readLine());
+        }
+        bufferedReader.close();
+        fileReader.close();
 
         //when
-        String output = tapSystemOut(() -> (new ConsoleInterface()).notifyWin());
+        String output = dictionary.getRandomWord();
 
         //then
-        assertThat(output.toLowerCase()).contains("вы победили");
+        assertThat(words.contains(output)).isTrue();
     }
-
-    @Test
-    @Disabled
-    @DisplayName("(ConsoleInterface)Сообщение о поражении")
-    void loseMessage() throws Exception {
-        //given
-
-        //when
-        String output = tapSystemOut(() -> (new ConsoleInterface()).notifyLose());
-
-        //then
-        assertThat(output).contains("Вы проиграли");
-    }
-
 }
