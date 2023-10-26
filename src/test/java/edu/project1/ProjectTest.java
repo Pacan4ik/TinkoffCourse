@@ -1,8 +1,11 @@
 package edu.project1;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 import nl.altindag.log.LogCaptor;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -47,12 +50,11 @@ public class ProjectTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("(GameRunner) Игра завершается поражением, если превышено количество попыток")
     void gameIsLost() {
         //given
         String[] words = {"слово"};
-        String inputData = "к\nк\nк\n";
+        String inputData = "а\nд\nе\n";
 
         //when
         var logCaptor = LogCaptor.forClass(ConsoleInterface.class);
@@ -65,25 +67,20 @@ public class ProjectTest {
 
         //then
         assertThat(logs.getLast().toLowerCase())
-            .isEqualTo("вы проиграли");
+            .isEqualTo("вы проиграли!");
 
     }
 
     @Test
-    @DisplayName("(Game) Игра не запускается, если слово имеет неккоректную длину")
+    @DisplayName("(DictionaryFromScratch) Игра не запускается, если слово имеет неккоректную длину")
     void gameWillNotStartIfLengthIsInCorrect() {
         //given
         String[] words = {"да"};
 
         //when
-        Game game = new Game(
-            new DictionaryFromScratch(words),
-            new ConsoleInterface(),
-            10
-        );
 
         //then
-        assertThrows(RuntimeException.class, game::gameStart);
+        assertThrows(RuntimeException.class, () -> new DictionaryFromScratch(words));
     }
 
     @Test
@@ -98,6 +95,48 @@ public class ProjectTest {
 
         //then
         assertThat(c).isEqualTo('а');
+    }
+
+    @Test
+    @DisplayName("(Game) Повторный ввод найденной буквы не приводит к поражению")
+    void reEnterFoundLetter() {
+        //given
+        String[] words = {"слово"};
+        String inputData = "с\nс\nл\nо\nв\n";
+
+        //when
+        var logCaptor = LogCaptor.forClass(ConsoleInterface.class);
+        GameRunner.runWithInputStream(
+            words,
+            new ByteArrayInputStream(inputData.getBytes()),
+            1
+        );
+        var logs = logCaptor.getInfoLogs();
+
+        //then
+        assertThat(logs.getLast().toLowerCase())
+            .isEqualTo("вы победили!");
+    }
+
+    @Test
+    @DisplayName("(Game) Повторный ввод ненайденной, но проверенной буквы не приводит к поражению")
+    void reEnterWrongLetter() {
+        //given
+        String[] words = {"слово"};
+        String inputData = "у\nу\nс\nс\nл\nо\nв\n";
+
+        //when
+        var logCaptor = LogCaptor.forClass(ConsoleInterface.class);
+        GameRunner.runWithInputStream(
+            words,
+            new ByteArrayInputStream(inputData.getBytes()),
+            2
+        );
+        var logs = logCaptor.getInfoLogs();
+
+        //then
+        assertThat(logs.getLast().toLowerCase())
+            .isEqualTo("вы победили!");
     }
 
     @Test
@@ -187,4 +226,27 @@ public class ProjectTest {
             .contains("правильно");
     }
 
+    @Test
+    @DisplayName("(DictionaryFromFile) Словарь возвращает слово из файла")
+    void dictionaryFromFileReturnsWord() throws Exception {
+        //given
+        Dictionary dictionary = new DictionaryFromFile();
+
+        FileReader fileReader =
+            new FileReader(DictionaryFromFile.class.getClassLoader()
+                .getResource("Dictionary").getFile());
+        List<String> words = new ArrayList<>();
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+        while (bufferedReader.ready()) {
+            words.add(bufferedReader.readLine());
+        }
+        bufferedReader.close();
+        fileReader.close();
+
+        //when
+        String output = dictionary.getRandomWord();
+
+        //then
+        assertThat(words.contains(output)).isTrue();
+    }
 }

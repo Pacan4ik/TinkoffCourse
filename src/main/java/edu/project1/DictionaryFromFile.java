@@ -1,8 +1,6 @@
 package edu.project1;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,37 +14,38 @@ class DictionaryFromFile implements Dictionary {
 
     DictionaryFromFile() {
         try {
-            FileReader fileReader =
-                new FileReader(DictionaryFromFile.class.getClassLoader()
-                    .getResource("Dictionary").getFile());
-            readWords(fileReader);
-            fileReader.close();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            readWords(DictionaryFromFile.class.getResource("/Dictionary").getFile());
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to read from default source", e);
         }
 
+        if (!isSourceCorrect(words)) {
+            throw new RuntimeException(new BadWordsSourceException());
+        }
     }
 
     DictionaryFromFile(String path) {
         try {
-            if (!new File(path).isFile()) {
-                throw new FileNotFoundException(String.format("File %s doesn't exit", path));
-            }
-            FileReader fileReader = new FileReader(path);
-            readWords(fileReader);
-            fileReader.close();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            readWords(path);
+        } catch (IOException e) {
+            throw new RuntimeException("Unable to read from file", e);
         }
 
+        if (!isSourceCorrect(words)) {
+            throw new RuntimeException(new BadWordsSourceException());
+        }
     }
 
-    private void readWords(FileReader fileReader) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        while (bufferedReader.ready()) {
-            words.add(bufferedReader.readLine());
+    private void readWords(String path) throws IOException {
+        try (FileReader fileReader = new FileReader(path);
+             BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+            while (bufferedReader.ready()) {
+                words.add(bufferedReader.readLine());
+            }
+
+        } catch (IOException e) {
+            throw new IOException(e);
         }
-        bufferedReader.close();
     }
 
     @Override

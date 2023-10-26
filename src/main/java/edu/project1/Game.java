@@ -1,7 +1,8 @@
 package edu.project1;
 
 import java.util.Arrays;
-import java.util.regex.Pattern;
+import java.util.HashMap;
+import java.util.Map;
 
 final class Game {
     private enum GameState {
@@ -9,8 +10,6 @@ final class Game {
         IN_PROCESS,
         OVER
     }
-
-    private final static int MIN_WORD_LEN = 3;
 
     private GameState gameState = GameState.NOT_STARTED;
 
@@ -21,6 +20,8 @@ final class Game {
     private String word;
 
     private char[] shadowedWord;
+
+    private final Map<Character, Boolean> alreadyGuessed = new HashMap<>();
 
     private final int maxMistakes;
 
@@ -50,6 +51,13 @@ final class Game {
 
                 return;
             }
+
+            if (alreadyGuessed.containsKey(guessed)) {
+                continue;
+            } else {
+                alreadyGuessed.put(guessed, true);
+            }
+
             if (tryOpenLetter(guessed)) {
                 gameInterface.notifyRightGuess();
                 if (checkWordIsCompletelyGuessed()) {
@@ -66,6 +74,11 @@ final class Game {
             }
 
         }
+        try {
+            gameInterface.close();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
@@ -80,20 +93,6 @@ final class Game {
 
     private void chooseWord() throws BadWordsSourceException {
         String wordFromDict = dictionary.getRandomWord();
-
-        if (!Pattern.compile("[a-zA-zа-яА-Я]+")
-            .matcher(wordFromDict)
-            .matches()) {
-            throw new BadWordsSourceException(String.format(
-                "Word %s don't match pattern [a-zA-zа-яА-Я]+",
-                wordFromDict
-            ));
-        }
-
-        if (wordFromDict.length() < MIN_WORD_LEN) {
-            throw new BadWordsSourceException("Word's len can't be less than 3");
-        }
-
         wordFromDict = wordFromDict.toLowerCase().replace('ё', 'е');
         word = wordFromDict;
     }
@@ -116,23 +115,5 @@ final class Game {
             }
         }
         return isMatched;
-    }
-
-    private static class BadWordsSourceException extends RuntimeException {
-        @SuppressWarnings("AvoidNoArgumentSuperConstructorCall") BadWordsSourceException() {
-            super();
-        }
-
-        BadWordsSourceException(String message) {
-            super(message);
-        }
-
-        BadWordsSourceException(Throwable cause) {
-            super(cause);
-        }
-
-        BadWordsSourceException(String message, Throwable cause) {
-            super(message, cause);
-        }
     }
 }

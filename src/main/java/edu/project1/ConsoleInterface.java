@@ -15,7 +15,7 @@ class ConsoleInterface implements GameInterface {
     private final BufferedReader bufferedReader;
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final Pattern LETTER_PATTERN = Pattern.compile("[a-zA-zа-яА-Я]");
+    private static final Pattern LETTER_PATTERN = Pattern.compile("[a-zA-Zа-яА-Я]");
 
     ConsoleInterface() {
         inputStreamReader = new InputStreamReader(System.in);
@@ -46,7 +46,7 @@ class ConsoleInterface implements GameInterface {
                 if (LETTER_PATTERN.matcher(input).matches()) {
                     return input.charAt(0);
                 }
-                LOGGER.info("Неккоректный ввод");
+                LOGGER.info("Неккоректный ввод. Возможные символы: " + LETTER_PATTERN);
                 input = bufferedReader.readLine();
             }
         } catch (IOException e) {
@@ -80,7 +80,6 @@ class ConsoleInterface implements GameInterface {
     @Override
     public void notifyLose() {
         LOGGER.info("Вы проиграли!");
-        close();
     }
 
     public void close() throws RuntimeException {

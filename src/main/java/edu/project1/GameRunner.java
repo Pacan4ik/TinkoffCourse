@@ -3,7 +3,16 @@ package edu.project1;
 import java.io.ByteArrayInputStream;
 
 public final class GameRunner {
+
+    private static final int MAX_MISTAKES = 10;
+
     private GameRunner() {
+    }
+
+    @SuppressWarnings("UncommentedMain")
+    public static void main(String[] args) {
+        Game game = new Game(new DictionaryFromFile(), new ConsoleInterface(), MAX_MISTAKES);
+        game.gameStart();
     }
 
     public static void run(int maxMistakes) {

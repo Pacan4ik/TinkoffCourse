@@ -1,6 +1,6 @@
 package edu.project1;
 
-interface GameInterface {
+interface GameInterface extends AutoCloseable {
     void showRules();
 
     char askLetter() throws RuntimeException;
@@ -16,11 +16,6 @@ interface GameInterface {
     void notifyLose();
 
     final class ForcedExitException extends RuntimeException {
-        @SuppressWarnings("AvoidNoArgumentSuperConstructorCall")
-        ForcedExitException() {
-            super();
-        }
-
         ForcedExitException(String message) {
             super(message);
         }
