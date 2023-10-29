@@ -74,7 +74,6 @@ class ConsoleInterface implements GameInterface {
     @Override
     public void notifyWin() {
         LOGGER.info("Вы победили!");
-        close();
     }
 
     @Override
