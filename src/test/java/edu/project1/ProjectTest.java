@@ -161,7 +161,7 @@ public class ProjectTest {
 
         //when
         var logCaptor = LogCaptor.forClass(ConsoleInterface.class);
-        (new ConsoleInterface()).typeShadowedWord(word);
+        (new ConsoleInterface()).typeWord(word);
         var logs = logCaptor.getInfoLogs();
         //then
         assertThat(logs.getFirst())

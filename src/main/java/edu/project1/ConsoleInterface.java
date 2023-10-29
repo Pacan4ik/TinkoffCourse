@@ -52,12 +52,11 @@ class ConsoleInterface implements GameInterface {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        close();
         throw new ForcedExitException("User forces exit (/exit)");
     }
 
     @Override
-    public void typeShadowedWord(String shadowedWord) {
+    public void typeWord(String shadowedWord) {
         LOGGER.info("Слово: " + shadowedWord);
     }
 
@@ -81,12 +80,8 @@ class ConsoleInterface implements GameInterface {
         LOGGER.info("Вы проиграли!");
     }
 
-    public void close() throws RuntimeException {
-        try {
-            bufferedReader.close();
-            inputStreamReader.close();
-        } catch (IOException e) {
-            throw new RuntimeException("Unable close readers", e);
-        }
+    public void close() throws IOException {
+        bufferedReader.close();
+        inputStreamReader.close();
     }
 }

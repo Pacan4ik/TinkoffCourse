@@ -5,7 +5,7 @@ interface GameInterface extends AutoCloseable {
 
     char askLetter() throws RuntimeException;
 
-    void typeShadowedWord(String shadowedWord);
+    void typeWord(String shadowedWord);
 
     void notifyWrongGuess(int amountMistakes, int maxMistakes);
 

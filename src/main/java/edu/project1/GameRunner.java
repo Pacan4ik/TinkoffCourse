@@ -4,7 +4,7 @@ import java.io.ByteArrayInputStream;
 
 public final class GameRunner {
 
-    private static final int MAX_MISTAKES = 10;
+    private static final int MAX_MISTAKES = 5;
 
     private GameRunner() {
     }

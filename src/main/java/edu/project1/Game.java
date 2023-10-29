@@ -41,41 +41,41 @@ final class Game {
         gameInterface.showRules();
         gameState = GameState.IN_PROCESS;
         int mistakes = 0;
-        while (gameState != GameState.OVER) {
-            gameInterface.typeShadowedWord(new String(shadowedWord));
-            char guessed;
-            try {
-                guessed = Character.toLowerCase(gameInterface.askLetter());
-            } catch (GameInterface.ForcedExitException e) {
-                gameState = GameState.OVER;
-
-                return;
-            }
-
-            if (alreadyGuessed.containsKey(guessed)) {
-                continue;
-            } else {
-                alreadyGuessed.put(guessed, true);
-            }
-
-            if (tryOpenLetter(guessed)) {
-                gameInterface.notifyRightGuess();
-                if (checkWordIsCompletelyGuessed()) {
-                    gameInterface.typeShadowedWord(new String(shadowedWord));
-                    gameInterface.notifyWin();
+        try (gameInterface) {
+            while (gameState != GameState.OVER) {
+                gameInterface.typeWord(new String(shadowedWord));
+                char guessed;
+                try {
+                    guessed = Character.toLowerCase(gameInterface.askLetter());
+                } catch (GameInterface.ForcedExitException e) {
                     gameState = GameState.OVER;
-                }
-            } else {
-                gameInterface.notifyWrongGuess(++mistakes, maxMistakes);
-                if (mistakes == maxMistakes) {
-                    gameInterface.notifyLose();
-                    gameState = GameState.OVER;
-                }
-            }
 
-        }
-        try {
-            gameInterface.close();
+                    return;
+                }
+
+                if (alreadyGuessed.containsKey(guessed)) {
+                    continue;
+                } else {
+                    alreadyGuessed.put(guessed, true);
+                }
+
+                if (tryOpenLetter(guessed)) {
+                    gameInterface.notifyRightGuess();
+                    if (checkWordIsCompletelyGuessed()) {
+                        gameInterface.typeWord(new String(shadowedWord));
+                        gameInterface.notifyWin();
+                        gameState = GameState.OVER;
+                    }
+                } else {
+                    gameInterface.notifyWrongGuess(++mistakes, maxMistakes);
+                    if (mistakes == maxMistakes) {
+                        gameInterface.notifyLose();
+                        gameState = GameState.OVER;
+                        gameInterface.typeWord(word);
+                    }
+                }
+
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
