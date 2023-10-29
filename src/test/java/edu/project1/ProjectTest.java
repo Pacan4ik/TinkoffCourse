@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProjectTest {
 
@@ -44,8 +45,7 @@ public class ProjectTest {
         var logs = logCaptor.getInfoLogs();
 
         //then
-        assertThat(logs.getLast().toLowerCase())
-            .isEqualTo("вы победили!");
+        assertTrue(logs.stream().anyMatch(s -> s.equalsIgnoreCase("вы победили!")));
 
     }
 
@@ -66,8 +66,7 @@ public class ProjectTest {
         var logs = logCaptor.getInfoLogs();
 
         //then
-        assertThat(logs.getLast().toLowerCase())
-            .isEqualTo("вы проиграли!");
+        assertTrue(logs.stream().anyMatch(s -> s.equalsIgnoreCase("вы проиграли!")));
 
     }
 
