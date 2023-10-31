@@ -7,9 +7,9 @@ public class projectTest {
 
     public static void main(String[] args) {
         BackTracking backTracking = new BackTracking();
-        Maze maze = backTracking.generate(14, 50);
+        Maze maze = backTracking.generate(15, 13);
         Renderer renderer = new Renderer();
         System.out.println(renderer.render(maze));
-        System.out.println(backTracking.startCord);
+        //System.out.println(backTracking.startCord);
     }
 }
