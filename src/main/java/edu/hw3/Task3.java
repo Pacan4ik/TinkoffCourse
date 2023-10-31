@@ -11,11 +11,7 @@ public class Task3 {
     static <T> Map<T, Integer> freqDict(List<T> list) {
         Map<T, Integer> freqDict = new HashMap<>();
         for (T obj : list) {
-            if (freqDict.containsKey(obj)) {
-                freqDict.replace(obj, freqDict.get(obj) + 1);
-            } else {
-                freqDict.put(obj, 1);
-            }
+            freqDict.merge(obj, 1, Integer::sum);
         }
         return freqDict;
     }

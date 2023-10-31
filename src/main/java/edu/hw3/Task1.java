@@ -14,9 +14,7 @@ public class Task1 {
         for (int i = 0; i < arr.length; i++) {
             if (arr[i] >= BORDERS[0][0] && arr[i] <= BORDERS[0][1]) {
                 arr[i] = (char) (BORDERS[0][0] + BORDERS[0][1] - arr[i]);
-                continue;
-            }
-            if (arr[i] >= BORDERS[1][0] && arr[i] <= BORDERS[1][1]) {
+            } else if (arr[i] >= BORDERS[1][0] && arr[i] <= BORDERS[1][1]) {
                 arr[i] = (char) (BORDERS[1][0] + BORDERS[1][1] - arr[i]);
             }
         }
