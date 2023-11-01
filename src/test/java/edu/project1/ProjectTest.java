@@ -3,6 +3,7 @@ package edu.project1;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import nl.altindag.log.LogCaptor;
@@ -14,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ProjectTest {
-
     @Test
     @DisplayName("(DictionaryDefault) Стандартный словарь возвращает слово")
     void dictionaryDefault() {
@@ -89,8 +89,12 @@ public class ProjectTest {
         String inputData = "%\nа.\nа\n";
 
         //when
-        GameInterface gameInterface = new ConsoleInterface(new ByteArrayInputStream(inputData.getBytes()));
-        char c = gameInterface.askLetter();
+        char c;
+        try (GameInterface gameInterface = new ConsoleInterface(new ByteArrayInputStream(inputData.getBytes()))) {
+            c = gameInterface.askLetter();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
         //then
         assertThat(c).isEqualTo('а');
@@ -145,14 +149,17 @@ public class ProjectTest {
         String inputData = "/exit\n";
 
         //when
-        GameInterface gameInterface = new ConsoleInterface(new ByteArrayInputStream(inputData.getBytes()));
+        try (GameInterface gameInterface =
+                 new ConsoleInterface(new ByteArrayInputStream(inputData.getBytes()));) {
 
-        //then
-        assertThrows(GameInterface.ForcedExitException.class, gameInterface::askLetter);
+            //then
+            assertThrows(GameInterface.ForcedExitException.class, gameInterface::askLetter);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Test
-
     @DisplayName("(ConsoleInterface) вывод слова")
     void outputWord() {
         //given
@@ -160,8 +167,10 @@ public class ProjectTest {
 
         //when
         var logCaptor = LogCaptor.forClass(ConsoleInterface.class);
-        (new ConsoleInterface()).typeWord(word);
+        GameInterface gameInterface = new ConsoleInterface();
+        gameInterface.typeWord(word);
         var logs = logCaptor.getInfoLogs();
+
         //then
         assertThat(logs.getFirst())
             .contains(word);
@@ -169,7 +178,6 @@ public class ProjectTest {
     }
 
     @Test
-
     @DisplayName("(GameRunner) Отсутствует чувствительность к регистру")
     void notCaseSensitive() {
         //given
@@ -200,7 +208,9 @@ public class ProjectTest {
 
         //when
         var logCaptor = LogCaptor.forClass(ConsoleInterface.class);
-        (new ConsoleInterface()).notifyWrongGuess(mistakes, maxMistakes);
+        GameInterface gameInterface = new ConsoleInterface();
+        gameInterface.notifyWrongGuess(mistakes, maxMistakes);
+
         var logs = logCaptor.getInfoLogs();
 
         //then
@@ -217,7 +227,8 @@ public class ProjectTest {
 
         //when
         var logCaptor = LogCaptor.forClass(ConsoleInterface.class);
-        (new ConsoleInterface()).notifyRightGuess();
+        GameInterface gameInterface = new ConsoleInterface();
+        gameInterface.notifyRightGuess();
         var logs = logCaptor.getInfoLogs();
 
         //then
@@ -227,25 +238,66 @@ public class ProjectTest {
 
     @Test
     @DisplayName("(DictionaryFromFile) Словарь возвращает слово из файла")
-    void dictionaryFromFileReturnsWord() throws Exception {
+    void dictionaryFromFileReturnsWord() {
         //given
         Dictionary dictionary = new DictionaryFromFile();
-
-        FileReader fileReader =
-            new FileReader(DictionaryFromFile.class.getClassLoader()
-                .getResource("Dictionary").getFile());
         List<String> words = new ArrayList<>();
-        BufferedReader bufferedReader = new BufferedReader(fileReader);
-        while (bufferedReader.ready()) {
-            words.add(bufferedReader.readLine());
+        try (FileReader fileReader =
+                 new FileReader(DictionaryFromFile.class.getClassLoader()
+                     .getResource("Dictionary").getFile());) {
+
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            while (bufferedReader.ready()) {
+                words.add(bufferedReader.readLine());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        bufferedReader.close();
-        fileReader.close();
 
         //when
         String output = dictionary.getRandomWord();
 
         //then
         assertThat(words.contains(output)).isTrue();
+    }
+
+    @Test
+    @DisplayName("(Game) После поражения выводится загаданное слово")
+    void gameAfterLoseShowsWord() {
+        //given
+        String[] words = {"uniqueword"};
+        String inputData = "а\nд\nе\n";
+
+        //when
+        var logCaptor = LogCaptor.forClass(ConsoleInterface.class);
+        GameRunner.runWithInputStream(
+            words,
+            new ByteArrayInputStream(inputData.getBytes()),
+            3
+        );
+        var logs = logCaptor.getInfoLogs();
+
+        //then
+        assertTrue(logs.stream().anyMatch(s -> s.contains(words[0])));
+    }
+
+    @Test
+    @DisplayName("(Game) После выхода выводится загаданное слово")
+    void gameAfterExitShowsWord() {
+        //given
+        String[] words = {"uniqueword"};
+        String inputData = "/exit\n";
+
+        //when
+        var logCaptor = LogCaptor.forClass(ConsoleInterface.class);
+        GameRunner.runWithInputStream(
+            words,
+            new ByteArrayInputStream(inputData.getBytes()),
+            3
+        );
+        var logs = logCaptor.getInfoLogs();
+
+        //then
+        assertTrue(logs.stream().anyMatch(s -> s.contains(words[0])));
     }
 }

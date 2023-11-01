@@ -5,10 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 final class Game {
-    private enum GameState {
+    enum GameState {
         NOT_STARTED,
         IN_PROCESS,
-        OVER
+        WIN,
+        LOSE,
+        EXIT
     }
 
     private GameState gameState = GameState.NOT_STARTED;
@@ -41,43 +43,40 @@ final class Game {
         gameInterface.showRules();
         gameState = GameState.IN_PROCESS;
         int mistakes = 0;
-        try (gameInterface) {
-            while (gameState != GameState.OVER) {
-                gameInterface.typeWord(new String(shadowedWord));
-                char guessed;
-                try {
-                    guessed = Character.toLowerCase(gameInterface.askLetter());
-                } catch (GameInterface.ForcedExitException e) {
-                    gameState = GameState.OVER;
-
-                    return;
-                }
-
-                if (alreadyGuessed.containsKey(guessed)) {
-                    continue;
-                } else {
-                    alreadyGuessed.put(guessed, true);
-                }
-
-                if (tryOpenLetter(guessed)) {
-                    gameInterface.notifyRightGuess();
-                    if (checkWordIsCompletelyGuessed()) {
-                        gameInterface.typeWord(new String(shadowedWord));
-                        gameInterface.notifyWin();
-                        gameState = GameState.OVER;
-                    }
-                } else {
-                    gameInterface.notifyWrongGuess(++mistakes, maxMistakes);
-                    if (mistakes == maxMistakes) {
-                        gameInterface.notifyLose();
-                        gameState = GameState.OVER;
-                        gameInterface.typeWord(word);
-                    }
-                }
-
+        while (gameState == GameState.IN_PROCESS) {
+            gameInterface.typeWord(new String(shadowedWord));
+            char guessed;
+            try {
+                guessed = Character.toLowerCase(gameInterface.askLetter());
+            } catch (GameInterface.ForcedExitException e) {
+                gameState = GameState.EXIT;
+                gameInterface.notifyGameOver(gameState);
+                gameInterface.typeWord(word);
+                return;
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+
+            if (alreadyGuessed.containsKey(guessed)) {
+                continue;
+            } else {
+                alreadyGuessed.put(guessed, true);
+            }
+
+            if (tryOpenLetter(guessed)) {
+                gameInterface.notifyRightGuess();
+                if (checkWordIsCompletelyGuessed()) {
+                    gameInterface.typeWord(new String(shadowedWord));
+                    gameState = GameState.WIN;
+                    gameInterface.notifyGameOver(gameState);
+                }
+            } else {
+                gameInterface.notifyWrongGuess(++mistakes, maxMistakes);
+                if (mistakes == maxMistakes) {
+                    gameState = GameState.LOSE;
+                    gameInterface.notifyGameOver(gameState);
+                    gameInterface.typeWord(word);
+                }
+            }
+
         }
 
     }

@@ -11,9 +11,7 @@ interface GameInterface extends AutoCloseable {
 
     void notifyRightGuess();
 
-    void notifyWin();
-
-    void notifyLose();
+    void notifyGameOver(Game.GameState gameState);
 
     final class ForcedExitException extends RuntimeException {
         ForcedExitException(String message) {

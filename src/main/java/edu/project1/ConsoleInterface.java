@@ -71,17 +71,19 @@ class ConsoleInterface implements GameInterface {
     }
 
     @Override
-    public void notifyWin() {
-        LOGGER.info("Вы победили!");
-    }
+    public void notifyGameOver(Game.GameState gameState) {
+        switch (gameState) {
+            case WIN -> LOGGER.info("Вы победили!");
+            case LOSE -> LOGGER.info("Вы проиграли!");
+            case EXIT -> LOGGER.info("Вы завершили игру.");
+            default -> throw new RuntimeException("Game is not over, but there was an attempt to notify");
+        }
 
-    @Override
-    public void notifyLose() {
-        LOGGER.info("Вы проиграли!");
     }
 
     public void close() throws IOException {
         bufferedReader.close();
         inputStreamReader.close();
+        LOGGER.warn("closed");
     }
 }
