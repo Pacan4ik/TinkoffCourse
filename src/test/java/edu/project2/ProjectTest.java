@@ -280,4 +280,31 @@ public class ProjectTest {
         }
     }
 
+    @Test
+    void shouldFindShortestWay() {
+        //given
+        String mazeStr =
+            """
+                #   # # # # # # #\s
+                #               #\s
+                #   # # # # #   #\s
+                #   #           #\s
+                #   #   # # #   #\s
+                #   #       #   #\s
+                #   # # #   #   #\s
+                #           #   #\s
+                # # # # # # #   #\s
+                """;
+        Coordinate start = new Coordinate(0, 1);
+        Coordinate end = new Coordinate(8, 7);
+        Maze maze = StringConverter(mazeStr, start, end);
+
+        //when
+        Solver solver = new DFS();
+
+        //then
+        List<Coordinate> path = solver.solve(maze);
+        Assertions.assertThat(path.size()).isEqualTo(15);
+    }
+
 }
