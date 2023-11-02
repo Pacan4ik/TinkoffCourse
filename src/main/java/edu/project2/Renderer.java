@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.jetbrains.annotations.NotNull;
 
 public class Renderer {
 
@@ -24,7 +25,7 @@ public class Renderer {
         return sb.toString();
     }
 
-    public String render(Maze maze, List<Coordinate> path) {
+    public String render(Maze maze, @NotNull List<Coordinate> path) {
         Cell[][] grid = maze.grid();
         Set<Coordinate> coordsSet = new HashSet<>(path);
         StringBuilder sb = new StringBuilder();

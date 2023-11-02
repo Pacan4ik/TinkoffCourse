@@ -10,6 +10,8 @@ import java.util.Stack;
 
 public class BackTracking implements Generator {
 
+
+    private static final int MIN_SIZE = 3;
     private static final int[][] OFFSETS = {{0, 2}, {2, 0}, {0, -2}, {-2, 0}};
     private static final Random RANDOM = new Random();
 
@@ -23,6 +25,10 @@ public class BackTracking implements Generator {
 
     @Override
     public Maze generate(int height, int width) {
+        if (height < MIN_SIZE || width < MIN_SIZE) {
+            throw new IllegalArgumentException();
+        }
+
         //odd
         oddHeight = height / 2 * 2 + 1;
         oddWidth = width / 2 * 2 + 1;
@@ -30,10 +36,15 @@ public class BackTracking implements Generator {
         Stack<Cell> currentBranch = new Stack<>();
         initGrid(oddHeight, oddWidth);
 
-        Coordinate startCoord = new Coordinate(
-            RANDOM.nextInt(oddHeight / 2) * 2 + 1,
-            RANDOM.nextInt(oddWidth / 2) * 2 + 1
-        );
+        Coordinate startCoord;
+        if (oddWidth > MIN_SIZE && oddHeight > MIN_SIZE) {
+            startCoord = new Coordinate(
+                RANDOM.nextInt(oddHeight / 2) * 2 + 1,
+                RANDOM.nextInt(oddWidth / 2) * 2 + 1
+            );
+        } else {
+            startCoord = new Coordinate(1, 1);
+        }
 
         Cell currentCell = grid[startCoord.row()][startCoord.col()];
         alreadyVisited.add(currentCell);

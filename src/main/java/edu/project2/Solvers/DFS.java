@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-public class BFS implements Solver {
+public class DFS implements Solver {
 
     private int minPathLength = 0;
     private Cell[][] grid;
@@ -19,13 +19,13 @@ public class BFS implements Solver {
     private static final int[][] OFFSETS = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
     @Override
-    public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
+    public List<Coordinate> solve(Maze maze) {
         grid = maze.grid();
         height = maze.height();
         width = maze.width();
         List<Coordinate> startPath = new LinkedList<>();
-        startPath.add(start);
-        return findPath(startPath, end);
+        startPath.add(maze.start());
+        return findPath(startPath, maze.end());
     }
 
     private List<Coordinate> findPath(List<Coordinate> currentPath, Coordinate end) {
