@@ -36,7 +36,17 @@ public class Contact implements Comparable<Contact> {
 
     @Override
     public int compareTo(@NotNull Contact o) {
-        return (secondName + firstName)
-            .compareTo(o.secondName + o.firstName);
+        if (!this.secondName.isBlank() && !o.secondName.isBlank()) {
+            int lastNameComparison = this.secondName.compareTo(o.secondName);
+            if (lastNameComparison != 0) {
+                return lastNameComparison;
+            }
+        } else if (!this.secondName.isBlank()) {
+            return this.secondName.compareTo(o.firstName);
+        } else if (!o.secondName.isBlank()) {
+            return this.firstName.compareTo(o.secondName);
+        }
+
+        return this.firstName.compareTo(o.firstName);
     }
 }
