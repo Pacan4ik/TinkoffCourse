@@ -108,13 +108,13 @@ public class Tasks {
             .toList();
     }
 
-    static Integer countWeightMoreThanHeight(@NotNull List<Animal> animals) { //TEEEEEST!!!!!
+    static Integer countWeightMoreThanHeight(@NotNull List<Animal> animals) {
         return Objects.requireNonNull(animals).stream()
             .filter(animal -> animal.weight() > animal.height())
             .mapToInt((animal) -> 1).sum();
     }
 
-    static List<Animal> getAnimalsWithNamesConsistMoreThanTwoWords(@NotNull List<Animal> animals) { //Test!!!!!!!!!1
+    static List<Animal> getAnimalsWithNamesConsistMoreThanTwoWords(@NotNull List<Animal> animals) {
         return Objects.requireNonNull(animals).stream()
             .filter(animal -> animal.name().split(" ").length > 2)
             .toList();
@@ -126,7 +126,7 @@ public class Tasks {
 
     }
 
-    static Map<Animal.Type, Integer> getTotalWeightInAgeRange(@NotNull List<Animal> animals, int k, int l) { //Tests!!
+    static Map<Animal.Type, Integer> getTotalWeightInAgeRange(@NotNull List<Animal> animals, int k, int l) {
         if (k > l || k < 0) {
             throw new IllegalArgumentException();
         }
