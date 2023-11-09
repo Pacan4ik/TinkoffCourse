@@ -109,9 +109,9 @@ public class Tasks {
     }
 
     static Integer countWeightMoreThanHeight(@NotNull List<Animal> animals) {
-        return Objects.requireNonNull(animals).stream()
+        return ((int) Objects.requireNonNull(animals).stream()
             .filter(animal -> animal.weight() > animal.height())
-            .mapToInt((animal) -> 1).sum();
+            .count());
     }
 
     static List<Animal> getAnimalsWithNamesConsistMoreThanTwoWords(@NotNull List<Animal> animals) {
@@ -174,7 +174,8 @@ public class Tasks {
     static Animal getTheHeaviestFish(@NotNull List<Animal>... lists) {
         return Arrays.stream(Objects.requireNonNull(lists))
             .flatMap(list ->
-                Objects.requireNonNull(list).stream().filter(animal -> animal.type() == Animal.Type.FISH))
+                Objects.requireNonNull(list).stream())
+            .filter(animal -> animal.type() == Animal.Type.FISH)
             .max(Comparator.comparing(Animal::weight)).orElse(null);
     }
 
@@ -201,14 +202,9 @@ public class Tasks {
         return getErrors(Objects.requireNonNull(animals)).entrySet().stream()
             .collect(Collectors.toMap(
                 Map.Entry::getKey,
-                entry -> {
-                    StringBuilder sb = new StringBuilder();
-                    for (Validation.ValidationError error : entry.getValue()) {
-                        sb.append(error.toString().toLowerCase().replace('_', ' ')).append(", ");
-                    }
-                    sb.delete(sb.length() - 2, sb.length());
-                    return sb.toString();
-                }
+                entry -> entry.getValue().stream()
+                    .map(values -> values.toString().toLowerCase().replaceAll("_", " "))
+                    .collect(Collectors.joining(", "))
             ));
     }
 }
