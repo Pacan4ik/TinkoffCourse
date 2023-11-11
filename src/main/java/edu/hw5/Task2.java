@@ -3,11 +3,13 @@ package edu.hw5;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.Temporal;
 import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class Task2 {
@@ -31,6 +33,14 @@ public class Task2 {
     }
 
     static LocalDate getNextBadFriday(LocalDate date){
+        TemporalAdjuster badFriday = TemporalAdjusters.next(DayOfWeek.FRIDAY);
+        while (badFriday.
+        System.out.println(badFriday);
         return null;
+    }
+
+
+    public static void main(String[] args) {
+        getNextBadFriday(LocalDate.now());
     }
 }
