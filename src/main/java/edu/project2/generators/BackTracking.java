@@ -5,6 +5,7 @@ import edu.project2.Coordinate;
 import edu.project2.Maze;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -62,7 +63,7 @@ public class BackTracking implements Generator {
 
         Cell currentCell = grid[startCoord.row()][startCoord.col()];
         alreadyVisited.add(currentCell);
-        ArrayDeque<Cell> currentBranch = new ArrayDeque<>();
+        Deque<Cell> currentBranch = new ArrayDeque<>();
         currentBranch.add(currentCell);
 
         do {
