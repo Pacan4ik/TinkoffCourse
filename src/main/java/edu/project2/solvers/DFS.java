@@ -1,4 +1,4 @@
-package edu.project2.Solvers;
+package edu.project2.solvers;
 
 import edu.project2.Cell;
 import edu.project2.Coordinate;
@@ -12,6 +12,7 @@ import java.util.Objects;
 public class DFS implements Solver {
 
     private int minPathLength = 0;
+
     private Cell[][] grid;
     private int height;
     private int width;
@@ -38,23 +39,21 @@ public class DFS implements Solver {
             return currentPath;
         }
 
-        List<List<Coordinate>> ways = new ArrayList<>(OFFSETS.length);
+        List<Coordinate> minPath = null;
         for (int i = 0; i < OFFSETS.length; i++) {
             Coordinate newCoord = getNewCoordinate(curCoord, i);
             List<Coordinate> newPath = null;
             if (isPossibleMove(newCoord) && !currentPath.contains(newCoord)) {
                 newPath = new LinkedList<>(currentPath);
                 newPath.add(newCoord);
-                ways.add(findPath(newPath, end));
+                List<Coordinate> tempPath = findPath(newPath, end);
+                if (tempPath != null && (minPath == null || tempPath.size() < minPath.size())) {
+                    minPath = tempPath;
+                }
             }
         }
 
-        if (ways.isEmpty() || ways.stream().allMatch(Objects::isNull)) {
-            return null;
-        }
-
-        return ways.stream().filter(Objects::nonNull).min(Comparator.comparing(List::size)).get();
-
+        return minPath;
     }
 
     private boolean isPossibleMove(Coordinate coordinate) {

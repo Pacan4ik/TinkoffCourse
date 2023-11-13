@@ -1,16 +1,16 @@
 package edu.project2;
 
-import edu.project2.Solvers.DFS;
-import edu.project2.Solvers.Solver;
 import edu.project2.generators.BackTracking;
 import edu.project2.generators.Generator;
+import edu.project2.solvers.DFS;
+import edu.project2.solvers.Solver;
 import java.util.List;
 
 public class Main {
 
     private static final int HEIGHT = 17;
 
-    private static final int WIDTH = 147;
+    private static final int WIDTH = 89;
 
     private static final Generator GENERATOR = new BackTracking();
 
@@ -25,6 +25,10 @@ public class Main {
     public static void main(String[] args) {
         Maze maze = GENERATOR.generate(HEIGHT, WIDTH);
         List<Coordinate> path = SOLVER.solve(maze);
-        System.out.println(RENDERER.render(maze, path));
+        if (path != null) {
+            System.out.println(RENDERER.render(maze, path));
+        } else {
+            System.out.println("Путь не найден");
+        }
     }
 }

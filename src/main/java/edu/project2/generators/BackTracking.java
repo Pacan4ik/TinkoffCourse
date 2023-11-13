@@ -3,26 +3,35 @@ package edu.project2.generators;
 import edu.project2.Cell;
 import edu.project2.Coordinate;
 import edu.project2.Maze;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Stack;
+import java.util.Set;
 
 public class BackTracking implements Generator {
-
 
     private static final int MIN_SIZE = 3;
     private static final int[][] OFFSETS = {{0, 2}, {2, 0}, {0, -2}, {-2, 0}};
     private static final Random RANDOM = new Random();
 
-    private final List<Cell> alreadyVisited = new ArrayList<>();
+    private final Set<Cell> alreadyVisited = new HashSet<>();
 
     private Coordinate entry = null;
     private Coordinate exit = null;
-    private int oddHeight;
-    private int oddWidth;
+    private int height;
+    private int width;
     Cell[][] grid;
 
+    /**
+     * Generate a maze with backtracking algorithm.
+     *
+     * @param height only odd numbers
+     * @param width  only odd numbers
+     * @return {@link Maze} with dimensions {@code height} and {@code width}
+     * @throws IllegalArgumentException if {@code height} or {@code width} less than 3 or even
+     **/
     @Override
     public Maze generate(int height, int width) {
         if (height < MIN_SIZE || width < MIN_SIZE) {
@@ -30,17 +39,22 @@ public class BackTracking implements Generator {
         }
 
         //odd
-        oddHeight = height / 2 * 2 + 1;
-        oddWidth = width / 2 * 2 + 1;
+        if (height % 2 != 1) {
+            throw new IllegalArgumentException("height must be an odd number");
+        }
+        if (width % 2 != 1) {
+            throw new IllegalArgumentException("width must be an odd number");
+        }
+        this.height = height;
+        this.width = width;
 
-        Stack<Cell> currentBranch = new Stack<>();
-        initGrid(oddHeight, oddWidth);
+        initGrid(height, width);
 
         Coordinate startCoord;
-        if (oddWidth > MIN_SIZE && oddHeight > MIN_SIZE) {
+        if (width > MIN_SIZE && height > MIN_SIZE) {
             startCoord = new Coordinate(
-                RANDOM.nextInt(oddHeight / 2) * 2 + 1,
-                RANDOM.nextInt(oddWidth / 2) * 2 + 1
+                RANDOM.nextInt(height / 2) * 2 + 1,
+                RANDOM.nextInt(width / 2) * 2 + 1
             );
         } else {
             startCoord = new Coordinate(1, 1);
@@ -48,6 +62,7 @@ public class BackTracking implements Generator {
 
         Cell currentCell = grid[startCoord.row()][startCoord.col()];
         alreadyVisited.add(currentCell);
+        ArrayDeque<Cell> currentBranch = new ArrayDeque<>();
         currentBranch.add(currentCell);
 
         do {
@@ -66,48 +81,48 @@ public class BackTracking implements Generator {
             }
         } while (!currentBranch.isEmpty());
 
-        if (oddHeight > oddWidth) {
+        if (height > width) {
             createEntryAndExitHorizontal();
         } else {
             createEntryAndExitOnVertical();
         }
-        return new Maze(oddHeight, oddWidth, grid, entry, exit);
+        return new Maze(height, width, grid, entry, exit);
     }
 
     private void createEntryAndExitHorizontal() {
-        int entryCol = RANDOM.nextInt(1, oddWidth - 1);
-        int exitCol = RANDOM.nextInt(1, oddWidth - 1);
+        int entryCol = RANDOM.nextInt(1, width - 1);
+        int exitCol = RANDOM.nextInt(1, width - 1);
 
         if (grid[1][entryCol].type() == Cell.Type.WALL) {
-            entryCol = adjustPosition(entryCol, oddWidth - 2);
+            entryCol = adjustPosition(entryCol, width - 2);
         }
 
-        if (grid[oddHeight - 2][exitCol].type() == Cell.Type.WALL) {
-            exitCol = adjustPosition(exitCol, oddWidth - 2);
+        if (grid[height - 2][exitCol].type() == Cell.Type.WALL) {
+            exitCol = adjustPosition(exitCol, width - 2);
         }
 
         grid[0][entryCol] = new Cell(0, entryCol, Cell.Type.PASSAGE);
         entry = new Coordinate(0, entryCol);
-        grid[oddHeight - 1][exitCol] = new Cell(oddHeight - 1, exitCol, Cell.Type.PASSAGE);
-        exit = new Coordinate(oddHeight - 1, exitCol);
+        grid[height - 1][exitCol] = new Cell(height - 1, exitCol, Cell.Type.PASSAGE);
+        exit = new Coordinate(height - 1, exitCol);
     }
 
     private void createEntryAndExitOnVertical() {
-        int entryRow = RANDOM.nextInt(1, oddHeight - 1);
-        int exitRow = RANDOM.nextInt(1, oddHeight - 1);
+        int entryRow = RANDOM.nextInt(1, height - 1);
+        int exitRow = RANDOM.nextInt(1, height - 1);
 
         if (grid[entryRow][1].type() == Cell.Type.WALL) {
-            entryRow = adjustPosition(entryRow, oddHeight - 2);
+            entryRow = adjustPosition(entryRow, height - 2);
         }
 
-        if (grid[exitRow][oddWidth - 2].type() == Cell.Type.WALL) {
-            exitRow = adjustPosition(exitRow, oddHeight - 2);
+        if (grid[exitRow][width - 2].type() == Cell.Type.WALL) {
+            exitRow = adjustPosition(exitRow, height - 2);
         }
 
         grid[entryRow][0] = new Cell(entryRow, 0, Cell.Type.PASSAGE);
         entry = new Coordinate(entryRow, 0);
-        grid[exitRow][oddWidth - 1] = new Cell(exitRow, oddWidth - 1, Cell.Type.PASSAGE);
-        exit = new Coordinate(exitRow, oddWidth - 1);
+        grid[exitRow][width - 1] = new Cell(exitRow, width - 1, Cell.Type.PASSAGE);
+        exit = new Coordinate(exitRow, width - 1);
     }
 
     private int adjustPosition(int position, int limit) {
@@ -154,7 +169,7 @@ public class BackTracking implements Generator {
     }
 
     private boolean isValidCoords(int row, int col) {
-        return row >= 0 && row < oddHeight && col >= 0 && col < oddWidth;
+        return row >= 0 && row < height && col >= 0 && col < width;
     }
 
     private void initGrid(int height, int width) {

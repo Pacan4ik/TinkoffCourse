@@ -1,7 +1,7 @@
 package edu.project2;
 
-import edu.project2.Solvers.DFS;
-import edu.project2.Solvers.Solver;
+import edu.project2.solvers.DFS;
+import edu.project2.solvers.Solver;
 import edu.project2.generators.BackTracking;
 import edu.project2.generators.Generator;
 import java.util.Arrays;
@@ -257,7 +257,7 @@ public class ProjectTest {
     @Test
     void shouldReturnCorrectPath() {
         //given
-        Maze maze = new BackTracking().generate(100, 100);
+        Maze maze = new BackTracking().generate(101, 101);
 
         //when
         Solver solver = new DFS();
