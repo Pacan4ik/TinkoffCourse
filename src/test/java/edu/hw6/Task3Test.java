@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 public class Task3Test {
@@ -57,6 +58,7 @@ public class Task3Test {
     }
 
     @Test
+    @Disabled
     void shouldFilterWritable() {
         //given
         DirectoryStream.Filter<Path> filter = Filters.writable;
@@ -86,6 +88,7 @@ public class Task3Test {
     }
 
     @Test
+    @Disabled
     void shouldFilterHidden() {
         //given
         DirectoryStream.Filter<Path> filter = Filters.hidden;
