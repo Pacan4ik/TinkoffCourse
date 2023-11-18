@@ -85,7 +85,7 @@ public class Task2Test {
         Task2.cloneFile(file);
 
         //then
-        List<String> lines = Files.readAllLines(Paths.get(tempDir.toString() + "\\" + "newfile — копия.txt"));
+        List<String> lines = Files.readAllLines(Paths.get(tempDir.toString() + "/" + "newfile — копия.txt"));
         Assertions.assertThat(lines.size()).isEqualTo(1);
         Assertions.assertThat(lines.get(0)).isEqualTo(text);
 
