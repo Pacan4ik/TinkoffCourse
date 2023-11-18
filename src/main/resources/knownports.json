@@ -1,0 +1,20 @@
+[
+    {"protocol": "TCP", "port": 21, "service": "FTP (File Transfer Protocol)"},
+    {"protocol": "TCP/UDP", "port": 53, "service": "DNS (Domain Name System)"},
+    {"protocol": "TCP", "port": 80, "service": "HTTP (Hypertext Transfer Protocol)"},
+    {"protocol": "UDP", "port": 137, "service": "Служба имен NetBIOS"},
+    {"protocol": "UDP", "port": 138, "service": "Служба датаграмм NetBIOS"},
+    {"protocol": "TCP", "port": 135, "service": "EPMAP"},
+    {"protocol": "TCP", "port": 139, "service": "Служба сеансов NetBIOS"},
+    {"protocol": "UDP", "port": 1900, "service": "Simple Service Discovery Protocol (SSDP)"},
+    {"protocol": "TCP", "port": 443, "service": "HTTPS (HTTP Secure)"},
+    {"protocol": "TCP", "port": 445, "service": "Microsoft-DS Active Directory"},
+    {"protocol": "UDP", "port": 3702, "service": "Динамическое обнаружение веб-служб"},
+    {"protocol": "UDP", "port": 5353, "service": "Многоадресный DNS"},
+    {"protocol": "UDP", "port": 5355, "service": "Link-Local Multicast Name Resolution (LLMNR)"},
+    {"protocol": "TCP", "port": 8080, "service": "HTTP Alternative (often used for web proxies)"},
+    {"protocol": "TCP", "port": 843, "service": "Adobe Flash"},
+    {"protocol": "TCP/UDP", "port": 17500, "service": "Dropbox"},
+    {"protocol": "TCP", "port": 27017, "service": "MongoDB"}
+]
+
