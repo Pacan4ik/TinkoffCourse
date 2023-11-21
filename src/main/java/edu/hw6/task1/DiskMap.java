@@ -2,7 +2,6 @@ package edu.hw6.task1;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,6 +15,7 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import static java.nio.file.StandardOpenOption.WRITE;
 
 public class DiskMap implements Map<String, String> {
 
@@ -32,33 +32,61 @@ public class DiskMap implements Map<String, String> {
     }
 
     private void readFileToMap() {
-        List<String> lines;
-        try {
-            lines = Files.readAllLines(pathToDisk);
+        try (var lineStream = Files.lines(pathToDisk)) {
+            var iterator = lineStream.iterator();
+            while (iterator.hasNext()) {
+                String entry = iterator.next();
+                if (!CONTENT_PATTERN.matcher(entry).matches()) {
+                    throw new PatternSyntaxException(
+                        "file contents do not match pattern",
+                        CONTENT_PATTERN.toString(),
+                        -1
+                    );
+                }
+                String[] keyValueStr = entry.split(":");
+                actualMap.put(keyValueStr[0], keyValueStr[1]);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-        for (String line : lines) {
-            if (!CONTENT_PATTERN.matcher(line).matches()) {
-                throw new PatternSyntaxException("file contents do not match pattern", CONTENT_PATTERN.toString(), -1);
-            }
-            String[] keyValueStr = line.split(":");
-            actualMap.put(keyValueStr[0], keyValueStr[1]);
         }
     }
 
-    private void appendNewLine(String line) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(pathToDisk.toFile(), true))) {
-            writer.write(line + "\n");
+    private void writeMapToFile() {
+        try (BufferedWriter writer = Files.newBufferedWriter(pathToDisk, WRITE)) {
+            for (var entry : actualMap.entrySet()) {
+                StringBuilder sb = new StringBuilder();
+                sb.append(entry.getKey()).append(":").append(entry.getValue()).append("\n");
+                writer.write(sb.toString());
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+//    private void appendNewLine(String line) {
+//        try (BufferedWriter writer = Files.newBufferedWriter(pathToDisk, APPEND)) {
+//            writer.write(line + "\n");
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     private void checkString(String string) {
         if (string.isEmpty() || string.contains("\n")) {
             throw new IllegalArgumentException("Expecting only not empty one line arguments");
         }
+    }
+
+    private void removeFromFile(String lineToRemove) {
+        try {
+            List<String> lines = Files.readAllLines(pathToDisk).stream()
+                .filter(line -> !line.equals(lineToRemove))
+                .toList();
+            Files.write(pathToDisk, lines);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
@@ -92,10 +120,7 @@ public class DiskMap implements Map<String, String> {
         checkString(key);
         checkString(value);
         String resPutting = actualMap.put(key, value);
-        if (resPutting != null) {
-            removeFromFile(String.format(KEY_VALUE_FORMAT, key, resPutting));
-        }
-        appendNewLine(String.format(KEY_VALUE_FORMAT, key, value));
+        writeMapToFile();
         return resPutting;
     }
 
@@ -108,23 +133,14 @@ public class DiskMap implements Map<String, String> {
         return resRemoving;
     }
 
-    private void removeFromFile(String lineToRemove) {
-        try {
-            List<String> lines = Files.readAllLines(pathToDisk).stream()
-                .filter(line -> !line.equals(lineToRemove))
-                .toList();
-            Files.write(pathToDisk, lines);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
     @Override
     public void putAll(@NotNull Map<? extends String, ? extends String> m) {
         for (var entry : m.entrySet()) {
-            put(entry.getKey(), entry.getValue());
+            checkString(entry.getKey());
+            checkString(entry.getValue());
         }
+        actualMap.putAll(m);
+        writeMapToFile();
     }
 
     @Override
