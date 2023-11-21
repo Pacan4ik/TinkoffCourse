@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Objects;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -73,6 +74,12 @@ public class Task5Test {
             .build();
         when(mockClient.send(eq(expectedRequestNews), eq(HttpResponse.BodyHandlers.ofString())))
             .thenReturn(mockedResponseNews);
+    }
+
+    @AfterAll
+    static void closeClients(){
+        mockClient.close();
+        mockClientIOException.close();
     }
 
     @BeforeAll
