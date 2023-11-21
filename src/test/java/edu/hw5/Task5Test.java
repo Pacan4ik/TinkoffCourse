@@ -19,8 +19,8 @@ public class Task5Test {
 
     @ParameterizedTest
     @MethodSource("correctLicensePlates")
-    void shouldPassValidation(String licensPlates){
-        assertTrue(Task5.isLicensePlateValid(licensPlates));
+    void shouldPassValidation(String licensePlates){
+        assertTrue(Task5.isLicensePlateValid(licensePlates));
     }
 
     static Arguments[] incorrectLicensePlates(){
@@ -30,6 +30,7 @@ public class Task5Test {
             Arguments.of("А123ВЕ7777"),
             Arguments.of("АА123ВЕ77"),
             Arguments.of("АА123В7"),
+            Arguments.of("АА000А88"),
 
 
         };
@@ -37,8 +38,8 @@ public class Task5Test {
 
     @ParameterizedTest
     @MethodSource("incorrectLicensePlates")
-    void shouldntPassValidation(String licensPlates){
-        assertFalse(Task5.isLicensePlateValid(licensPlates));
+    void shouldntPassValidation(String licensePlates){
+        assertFalse(Task5.isLicensePlateValid(licensePlates));
     }
 
 

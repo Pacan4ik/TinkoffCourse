@@ -7,7 +7,7 @@ public class Task6 {
     }
 
     static boolean isSubsequence(String s, String t) {
-        Pattern pattern = Pattern.compile(String.format("^.*%s.*$", s));
+        Pattern pattern = Pattern.compile("^.*" + Pattern.quote(s) + ".*$");
         return pattern.matcher(t).matches();
     }
 }

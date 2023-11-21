@@ -48,7 +48,7 @@ public class Task3 {
 
         YESTERDAY(string -> {
             if (string.equalsIgnoreCase("yesterday")) {
-                return LocalDate.now().plusDays(-1);
+                return LocalDate.now().minusDays(1);
             } else {
                 throw new DateTimeParseException("Doesn't match \"yesterday\"", string, 0);
             }
@@ -58,7 +58,7 @@ public class Task3 {
             Pattern pattern = Pattern.compile("^(\\d+) day(s*) ago$");
             Matcher matcher = pattern.matcher(string);
             if (matcher.matches()) {
-                return LocalDate.now().plusDays(-Long.parseLong(matcher.group(1)));
+                return LocalDate.now().minusDays(Long.parseLong(matcher.group(1)));
             } else {
                 throw new DateTimeParseException(String.format("Doesn't match pattern %s", pattern), string, 0);
             }
