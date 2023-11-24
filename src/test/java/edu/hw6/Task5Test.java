@@ -12,14 +12,13 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Objects;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Task5Test {
 
@@ -76,11 +75,11 @@ public class Task5Test {
             .thenReturn(mockedResponseNews);
     }
 
-    @AfterAll
-    static void closeClients(){
-        mockClient.close();
-        mockClientIOException.close();
-    }
+//    @AfterAll
+//    static void closeClients() {
+//        mockClient.close();
+//        mockClientIOException.close();
+//    }
 
     @BeforeAll
     static void prepareMockIOException() throws IOException, InterruptedException {
@@ -92,57 +91,58 @@ public class Task5Test {
     @Test
     void shouldReturnId() {
         //given
-        HackerNews hackerNews = new HackerNews(mockClient);
+        try (HackerNews hackerNews = new HackerNews(mockClient)) {
 
-        //when
-        long[] result = hackerNews.hackerNewsTopStories();
+            //when
+            long[] result = hackerNews.hackerNewsTopStories();
 
-        //then
-        Assertions.assertThat(Arrays.toString(result).replace(" ", ""))
-            .isEqualTo(MOCKED_RESPONSE_IDS_STRING);
-
+            //then
+            Assertions.assertThat(Arrays.toString(result).replace(" ", ""))
+                .isEqualTo(MOCKED_RESPONSE_IDS_STRING);
+        }
     }
 
     @Test
     void shouldReturnTitle() {
         //given
-        HackerNews hackerNews = new HackerNews(mockClient);
-        int newsID = 38281944;
+        try (HackerNews hackerNews = new HackerNews(mockClient)) {
+            int newsID = 38281944;
 
-        //when
-        String title = hackerNews.news(38281944);
+            //when
+            String title = hackerNews.news(newsID);
 
-        //then
-        assertEquals(
-            "NTSB Calls for Technology to Reduce Speeding in All New Cars",
-            title
-        );
+            //then
+            assertEquals(
+                "NTSB Calls for Technology to Reduce Speeding in All New Cars",
+                title
+            );
+        }
 
     }
 
     @Test
     void shouldReturnEmptyIDs() {
         //given
-        HackerNews hackerNews = new HackerNews(mockClientIOException);
+        try (HackerNews hackerNews = new HackerNews(mockClientIOException)) {
+            //when
+            long[] result = hackerNews.hackerNewsTopStories();
 
-        //when
-        long[] result = hackerNews.hackerNewsTopStories();
-
-        //then
-        Assertions.assertThat(result).isEmpty();
+            //then
+            Assertions.assertThat(result).isEmpty();
+        }
 
     }
 
     @Test
     void shouldReturnNullNews() {
         //given
-        HackerNews hackerNews = new HackerNews(mockClientIOException);
+        try (HackerNews hackerNews = new HackerNews(mockClientIOException)) {
 
-        //when
-        String news = hackerNews.news(1);
+            //when
+            String news = hackerNews.news(1);
 
-        //then
-        Assertions.assertThat(news).isNull();
-
+            //then
+            Assertions.assertThat(news).isNull();
+        }
     }
 }
