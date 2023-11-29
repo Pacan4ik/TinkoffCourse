@@ -62,7 +62,7 @@ public class SyncPersonDataBase implements PersonDataBase {
     }
 
     @Override
-    public Person getById(int id) {
+    public synchronized Person getById(int id) {
         return idsMap.get(id);
     }
 
