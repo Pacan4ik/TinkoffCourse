@@ -15,10 +15,13 @@ import org.junit.jupiter.api.Test;
 public class Task1Test {
 
     @Test
-    void shouldReceiveResponse() {
+    void shouldReceiveResponse() throws InterruptedException {
         //given
         QuotesServer quotesServer = new QuotesServer(12345, 3);
         quotesServer.start();
+
+        Thread.sleep(1000); //надеемся что сервер успеет подняться
+
         QuotesClient quotesClient = new QuotesClient("localhost", 12345);
 
         //when
@@ -34,10 +37,12 @@ public class Task1Test {
     }
 
     @Test
-    void shouldHandleMultipleClients() {
+    void shouldHandleMultipleClients() throws InterruptedException {
         //given
         QuotesServer quotesServer = new QuotesServer(12345, 3);
         quotesServer.start();
+        Thread.sleep(1000); //надеемся что сервер успеет подняться
+
         Callable<String> callable = () -> new QuotesClient("localhost", 12345).askQuote("интеллект");
         var tasks = Stream.generate(() -> callable).limit(20).toList();
 
@@ -45,8 +50,6 @@ public class Task1Test {
         List<Future<String>> responses;
         try (ExecutorService executorService = Executors.newFixedThreadPool(20)) {
             responses = executorService.invokeAll(tasks);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
 
         //then
