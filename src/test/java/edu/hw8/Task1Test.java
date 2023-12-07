@@ -68,12 +68,12 @@ public class Task1Test {
     }
 
     @Test
-    void shouldThrowExceptionIfStartTwice(){
+    void shouldThrowExceptionIfStartTwice() throws InterruptedException {
         //given
         QuotesServer quotesServer = new QuotesServer(12345,3);
-
         //when
         quotesServer.start();
+        Thread.sleep(1000);
 
         //then
         Assertions.assertThrows(IllegalStateException.class, quotesServer::start);

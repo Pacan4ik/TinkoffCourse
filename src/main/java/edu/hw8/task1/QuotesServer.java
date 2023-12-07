@@ -56,6 +56,9 @@ public class QuotesServer implements AutoCloseable {
     }
 
     public void shutdown() {
+        if (serverSocket.isClosed()) {
+            throw new IllegalStateException("Server is already off");
+        }
         if (!serverSocket.isBound()) {
             throw new IllegalStateException("The server has not started yet");
         }
