@@ -1,11 +1,10 @@
 package edu.hw8.task2;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
+import org.jetbrains.annotations.NotNull;
 
 public class FixedThreadPool implements ThreadPool {
 
