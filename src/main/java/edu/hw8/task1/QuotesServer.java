@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -24,23 +25,30 @@ public class QuotesServer implements AutoCloseable {
     private static final String DEFAULT_ANSWER = "Иногда лучше просто промолчать";
     private final int port;
     private final int maxConnections;
-    private ServerSocket serverSocket = null;
+    private ServerSocket serverSocket;
 
     public QuotesServer(int port, int maxConnections) {
         this.port = port;
         this.maxConnections = maxConnections;
+        try {
+            this.serverSocket = new ServerSocket();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void start() {
+        if (serverSocket.isBound()) {
+            throw new IllegalStateException("The server is already running");
+        }
         new Thread(() -> {
             try (ExecutorService executorService = Executors.newFixedThreadPool(maxConnections)) {
-                serverSocket = new ServerSocket(port);
-                while (true) {
+                serverSocket.bind(new InetSocketAddress(port));
+                while (!serverSocket.isClosed()) {
                     Socket clientSocket = serverSocket.accept();
                     executorService.submit(new RequestHandler(clientSocket));
                 }
             } catch (SocketException ignored) {
-
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -48,12 +56,13 @@ public class QuotesServer implements AutoCloseable {
     }
 
     public void shutdown() {
-        if (serverSocket != null) {
-            try {
-                serverSocket.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        if (!serverSocket.isBound()) {
+            throw new IllegalStateException("The server has not started yet");
+        }
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -66,8 +75,10 @@ public class QuotesServer implements AutoCloseable {
 
         @Override
         public void run() {
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                 PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true)
+            try (
+                Socket socket = this.socket;
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true)
             ) {
                 String word = bufferedReader.readLine().toLowerCase();
 
@@ -79,7 +90,6 @@ public class QuotesServer implements AutoCloseable {
                     }
                 }
                 printWriter.println(index != -1 ? QUOTES[index] : DEFAULT_ANSWER);
-                socket.close();
 
             } catch (IOException e) {
                 throw new RuntimeException(e);

@@ -67,4 +67,31 @@ public class Task1Test {
         quotesServer.close();
     }
 
+    @Test
+    void shouldThrowExceptionIfStartTwice(){
+        //given
+        QuotesServer quotesServer = new QuotesServer(12345,3);
+
+        //when
+        quotesServer.start();
+
+        //then
+        Assertions.assertThrows(IllegalStateException.class, quotesServer::start);
+
+        quotesServer.close();
+    }
+
+    @Test
+    void shouldThrowExceptionIfShutdownBeforeStart(){
+        //given
+        QuotesServer quotesServer = new QuotesServer(12345,3);
+
+        //when
+
+
+        //then
+        Assertions.assertThrows(IllegalStateException.class, quotesServer::shutdown);
+
+    }
+
 }

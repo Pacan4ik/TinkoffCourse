@@ -1,11 +1,15 @@
 package edu.hw8.task2;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
-import org.jetbrains.annotations.NotNull;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class FixedThreadPool implements ThreadPool {
 
+    private static final int OFFER_TIMEOUT_SECONDS = 1;
     private final Thread[] threads;
     private final BlockingQueue<Runnable> taskQueue;
 
@@ -43,7 +47,9 @@ public class FixedThreadPool implements ThreadPool {
     @Override
     public void execute(@NotNull Runnable runnable) {
         try {
-            taskQueue.put(runnable);
+            if (!taskQueue.offer(runnable, OFFER_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+                throw new RejectedExecutionException("Timed out waiting for adding a task");
+            }
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
