@@ -8,13 +8,13 @@ import java.util.List;
 
 public class DFS implements Solver {
 
-    private int minPathLength = 0;
+    protected int minPathLength = 0;
 
-    private Cell[][] grid;
-    private int height;
-    private int width;
+    protected Cell[][] grid;
+    protected int height;
+    protected int width;
 
-    private static final int[][] OFFSETS = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    protected static final int[][] OFFSETS = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
 
     @Override
     public List<Coordinate> solve(Maze maze) {
@@ -26,7 +26,7 @@ public class DFS implements Solver {
         return findPath(startPath, maze.end());
     }
 
-    private List<Coordinate> findPath(List<Coordinate> currentPath, Coordinate end) {
+    protected List<Coordinate> findPath(List<Coordinate> currentPath, Coordinate end) {
         if (minPathLength != 0 && currentPath.size() >= minPathLength) {
             return null;
         }
@@ -53,13 +53,13 @@ public class DFS implements Solver {
         return minPath;
     }
 
-    private boolean isPossibleMove(Coordinate coordinate) {
+    protected boolean isPossibleMove(Coordinate coordinate) {
         return ((coordinate.row() >= 0 && coordinate.row() < height)
             && (coordinate.col() >= 0 && coordinate.col() < width)
             && grid[coordinate.row()][coordinate.col()].type() == Cell.Type.PASSAGE);
     }
 
-    private Coordinate getNewCoordinate(Coordinate current, int offsetIndex) {
+    protected Coordinate getNewCoordinate(Coordinate current, int offsetIndex) {
         return new Coordinate(
             current.row() + OFFSETS[offsetIndex][0],
             current.col() + OFFSETS[offsetIndex][1]

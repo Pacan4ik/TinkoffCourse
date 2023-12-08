@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 public class StatsCollector implements AutoCloseable {
     private final Map<String, double[]> dataMap = new ConcurrentHashMap<>();
-
     private final ExecutorService executor;
 
     public StatsCollector(int threads) {
@@ -26,6 +25,8 @@ public class StatsCollector implements AutoCloseable {
 
     private final Lock pushLock = lock.readLock(); //shared
     private final Lock computeLock = lock.readLock(); //exclusive
+
+    private static final int TIMEOUT_SECONDS = 5;
 
     public void push(String metricName, double[] data) {
         pushLock.lock();
@@ -52,7 +53,7 @@ public class StatsCollector implements AutoCloseable {
                         Map.Entry::getKey,
                         e -> {
                             try {
-                                return e.getValue().get(5, TimeUnit.SECONDS);
+                                return e.getValue().get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
                             } catch (InterruptedException | ExecutionException | TimeoutException ex) {
                                 throw new RuntimeException(ex);
                             }

@@ -9,6 +9,10 @@ import java.util.concurrent.RecursiveTask;
 import java.util.function.Predicate;
 
 public class FileSystemFinder {
+
+    private FileSystemFinder() {
+    }
+
     public static List<Path> findDirectoriesWithMoreThanNFiles(Path startDir, int n, int threads) {
         try (ForkJoinPool forkJoinPool = new ForkJoinPool(threads)) {
             return forkJoinPool.invoke(new FindDirTask(startDir, n));
@@ -98,15 +102,15 @@ public class FileSystemFinder {
 
     public static class SimpleFilePredicates {
         public static Predicate<File> sizeMoreThan(int bytes) {
-            return (f) -> f.length() > bytes;
+            return (f) -> f.isFile() && f.length() > bytes;
         }
 
         public static Predicate<File> sizeLessThan(int bytes) {
-            return (f) -> f.length() < bytes;
+            return (f) -> f.isFile() && f.length() < bytes;
         }
 
         public static Predicate<File> sizeExactly(int bytes) {
-            return (f) -> f.length() == bytes;
+            return (f) -> f.isFile() && f.length() == bytes;
         }
 
         public static Predicate<File> hasExtension(String extension) {
