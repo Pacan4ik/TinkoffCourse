@@ -8,7 +8,7 @@ import java.util.List;
 public interface Renderer {
     FractalImage render(
         FractalImage canvas,
-        Rect word,
+        Rect world,
         List<Transformation> variants,
         int samples,
         int iterPerSample,
