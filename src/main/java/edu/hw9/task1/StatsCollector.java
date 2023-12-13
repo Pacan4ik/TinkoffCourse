@@ -1,73 +1,34 @@
 package edu.hw9.task1;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.stream.Collectors;
 
 public class StatsCollector implements AutoCloseable {
-    private final Map<String, double[]> dataMap = new ConcurrentHashMap<>();
+    private final Map<String, Stats> statsMap = new ConcurrentHashMap<>();
     private final ExecutorService executor;
+    private static final int TIMEOUT_SECONDS = 10;
 
     public StatsCollector(int threads) {
         this.executor = Executors.newFixedThreadPool(threads);
     }
 
-    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-
-    private final Lock pushLock = lock.readLock(); //shared
-    private final Lock computeLock = lock.readLock(); //exclusive
-
-    private static final int TIMEOUT_SECONDS = 5;
-
     public void push(String metricName, double[] data) {
-        pushLock.lock();
-        try {
-            dataMap.put(metricName, data);
-        } finally {
-            pushLock.unlock();
+        if (executor.isShutdown()) {
+            throw new RuntimeException("Executor service has been closed");
         }
+        CompletableFuture.runAsync(() -> computeStats(metricName, data), executor)
+            .orTimeout(TIMEOUT_SECONDS, TimeUnit.SECONDS);
     }
 
     public Map<String, Stats> stats() {
-        computeLock.lock();
-        Map<String, Future<Stats>> futureStatsMap;
-        try {
-            futureStatsMap = new HashMap<>();
-            for (var entry : dataMap.entrySet()) {
-                futureStatsMap.put(
-                    entry.getKey(),
-                    executor.submit(() -> computeStats(entry.getKey()))
-                );
-            }
-            return futureStatsMap.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        e -> {
-                            try {
-                                return e.getValue().get(TIMEOUT_SECONDS, TimeUnit.SECONDS);
-                            } catch (InterruptedException | ExecutionException | TimeoutException ex) {
-                                throw new RuntimeException(ex);
-                            }
-                        }
-                    )
-                );
-        } finally {
-            computeLock.unlock();
-        }
-
+        return Map.copyOf(statsMap);
     }
 
-    private Stats computeStats(String metric) {
-        double[] data = dataMap.get(metric);
+    private void computeStats(String metricName, double[] data) {
         double sum = data[0];
         double max = data[0];
         double min = data[0];
@@ -81,7 +42,7 @@ public class StatsCollector implements AutoCloseable {
             }
         }
         double average = sum / data.length;
-        return new Stats(sum, average, max, min);
+        statsMap.put(metricName, new Stats(sum, average, max, min));
     }
 
     @Override
