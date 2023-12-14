@@ -10,7 +10,11 @@ import java.util.List;
 import java.util.Random;
 
 public class SRenderer implements Renderer {
-    private Random random = new Random();
+    protected Random random;
+
+    protected SRenderer() {
+        this.random = new Random();
+    }
 
     @Override
     public FractalImage render(
@@ -39,17 +43,20 @@ public class SRenderer implements Renderer {
                     if (pixel == null) {
                         continue;
                     }
-                    pixel.setRed((pixel.getRed() + tColor.getRed()) / 2);
-                    pixel.setGreen((pixel.getGreen() + tColor.getGreen()) / 2);
-                    pixel.setBlue((pixel.getBlue() + tColor.getBlue()) / 2);
-                    pixel.incrementCounter();
+                    processPixel(pixel, tColor);
 
                 }
-
             }
         }
         return canvas;
 
+    }
+
+    protected void processPixel(Pixel pixel, Color tColor) {
+        pixel.setRed((pixel.getRed() + tColor.getRed()) / 2);
+        pixel.setGreen((pixel.getGreen() + tColor.getGreen()) / 2);
+        pixel.setBlue((pixel.getBlue() + tColor.getBlue()) / 2);
+        pixel.incrementCounter();
     }
 
     protected static Point rotate(Point point, double rad) {
@@ -65,8 +72,8 @@ public class SRenderer implements Renderer {
         int resY = canvas.getHeight();
         int centerX = resX / 2;
         int centerY = resY / 2;
-        int x = (int) (point.x()  * resX / 2) + centerX;
-        int y = (int) (point.y()  * resY / 2) + centerY;
+        int x = (int) (point.x() * resX / 2) + centerX;
+        int y = (int) (point.y() * resY / 2) + centerY;
         if (!canvas.contains(x, y)) {
             return null;
         }
