@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -53,8 +54,9 @@ public class CacheProxy implements InvocationHandler {
         }
         cacheValue = method.invoke(target, args);
         cache.put(key, cacheValue);
-        if (method.getAnnotation(Cache.class).persist()) {
-            saveCache(method.getAnnotation(Cache.class).path());
+        Cache cacheAnnotation = method.getAnnotation(Cache.class);
+        if (cacheAnnotation.persist()) {
+            saveCache(cacheAnnotation.path());
         }
         return cacheValue;
     }

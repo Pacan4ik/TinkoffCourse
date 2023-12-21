@@ -18,39 +18,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 public class Task2Test {
-
+    @TempDir
     private static Path tempDir;
-
-    @BeforeEach
-    void createTempDir() throws IOException {
-        tempDir = Files.createTempDirectory("hw10TEMP_");
-    }
-
-    @AfterEach
-    void deleteTempDir() throws IOException {
-        Files.walkFileTree(tempDir, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
-                throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException e)
-                throws IOException {
-                if (e == null) {
-                    Files.delete(dir);
-                    return FileVisitResult.CONTINUE;
-                } else {
-                    throw e;
-                }
-            }
-        });
-
-    }
 
     @Test
     void shouldReturnWorkingInstance() {
@@ -118,7 +90,6 @@ public class Task2Test {
         //when
         int res1 = proxy.add((short) 2, (short) 3);
         int res2 = proxy.add((short) 100, (short) 100);
-
 
         //then
         Assertions.assertEquals(5, res1);
