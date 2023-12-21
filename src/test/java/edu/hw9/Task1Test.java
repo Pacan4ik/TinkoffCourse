@@ -2,9 +2,8 @@ package edu.hw9;
 
 import edu.hw9.task1.StatsCollector;
 import java.util.AbstractMap;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -20,14 +19,17 @@ public class Task1Test {
     void shouldComputeStats() throws InterruptedException {
         //given
         double[] data = new double[] {10, 2, 3, 4, 5, 6, 7, 8, 9, 1};
-        StatsCollector statsCollector = new StatsCollector(2);
+        Map<String, StatsCollector.Stats> res;
 
         //when
-        statsCollector.push("data", data);
-        Thread.sleep(200);
+        try (StatsCollector statsCollector = new StatsCollector(2)) {
+            statsCollector.push("data", data);
+            Thread.sleep(200);
+
+            res = statsCollector.stats();
+        }
 
         //then
-        var res = statsCollector.stats();
         Assertions.assertEquals(1, res.size());
         assertThat(res).containsOnly(
             new AbstractMap.SimpleEntry<>(
@@ -35,39 +37,64 @@ public class Task1Test {
                 new StatsCollector.Stats(55, 5.5, 10, 1)
             )
         );
-        statsCollector.close();
+
     }
 
     @RepeatedTest(200)
-    void shouldComputeStatsWithConcurrency() {
+    void shouldComputeStatsWithConcurrency() throws ExecutionException, InterruptedException {
         //given
         int n = 2000;
         double[] data = new double[n];
         for (int i = 0; i < n; i++) {
             data[i] = i;
         }
-        StatsCollector statsCollector = new StatsCollector(4);
+        Map<String, StatsCollector.Stats> res;
 
         //when
-        Callable<Void> callable = () -> {
-            double[] doubles = Arrays.copyOf(data, n);
-            statsCollector.push(doubles.toString(), doubles);
-            return null;
-        };
-        try (ExecutorService executorService = Executors.newFixedThreadPool(4)) {
+        try (StatsCollector statsCollector = new StatsCollector(4);
+             ExecutorService executorService = Executors.newFixedThreadPool(4)) {
+            Callable<Void> callable = () -> {
+                double[] doubles = Arrays.copyOf(data, n);
+                statsCollector.push(doubles.toString(), doubles);
+                return null;
+            };
+
             executorService.invokeAny(Stream.generate(()
                 -> callable).limit(200).toList());
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
+            res = statsCollector.stats();
         }
 
-
         //then
-        var res = statsCollector.stats();
-        StatsCollector.Stats expected = new StatsCollector.Stats(1999000, 999.5, 1999, 0);
+        StatsCollector.Stats expected = new StatsCollector.Stats(
+            1999000,
+            999.5,
+            1999,
+            0
+        );
         assertThat(res.values()).allMatch(stats -> (stats.equals(expected)));
 
-        statsCollector.close();
-
     }
+
+    @Test
+    void shouldCombineData() throws InterruptedException {
+        //given
+        double[] data1 = new double[] {1, 2, 3, 4, 5};
+        double[] data2 = new double[] {6, 7, 8, 9, 10};
+        Map<String, StatsCollector.Stats> res;
+
+        //when
+        try (StatsCollector statsCollector = new StatsCollector(4)) {
+            statsCollector.push("metricName", data1);
+            statsCollector.push("metricName", data2);
+
+            Thread.sleep(400);
+
+            res = statsCollector.stats();
+        }
+
+        //then
+        StatsCollector.Stats expected = new StatsCollector.Stats(55, 5.5, 10, 1);
+        assertThat(res.get("metricName")).isEqualTo(expected);
+    }
+
 }
