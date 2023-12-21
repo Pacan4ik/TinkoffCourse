@@ -2,10 +2,10 @@ package edu.project4;
 
 public class Pixel {
     private static final int MAX_COLOR_VALUE = 255;
-    private int counter;
-    private int red;
-    private int green;
-    private int blue;
+    private volatile int counter;
+    private volatile int red;
+    private volatile int green;
+    private volatile int blue;
 
     public Pixel(int red, int green, int blue) {
         this.counter = 0;
@@ -18,7 +18,7 @@ public class Pixel {
         return counter;
     }
 
-    public void incrementCounter() {
+    public synchronized void incrementCounter() {
         counter++;
     }
 
@@ -26,7 +26,7 @@ public class Pixel {
         return red;
     }
 
-    public void setRed(int red) {
+    public synchronized void setRed(int red) {
         this.red = red % (MAX_COLOR_VALUE + 1);
     }
 
@@ -34,7 +34,7 @@ public class Pixel {
         return green;
     }
 
-    public void setGreen(int green) {
+    public synchronized void setGreen(int green) {
         this.green = green % (MAX_COLOR_VALUE + 1);
     }
 
@@ -42,8 +42,14 @@ public class Pixel {
         return blue;
     }
 
-    public void setBlue(int blue) {
+    public synchronized void setBlue(int blue) {
         this.blue = blue % (MAX_COLOR_VALUE + 1);
+    }
+
+    public synchronized void mixColor(int red, int green, int blue) {
+        this.setRed((this.getRed() + red) / 2);
+        this.setGreen((this.getGreen() + green) / 2);
+        this.setBlue((this.getBlue() + blue) / 2);
     }
 }
 

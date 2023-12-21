@@ -8,12 +8,13 @@ import edu.project4.transformations.Transformation;
 import java.awt.Color;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class SRenderer implements Renderer {
     protected Random random;
 
     protected SRenderer() {
-        this.random = new Random();
+        this.random = ThreadLocalRandom.current();
     }
 
     @Override
@@ -43,20 +44,13 @@ public class SRenderer implements Renderer {
                     if (pixel == null) {
                         continue;
                     }
-                    processPixel(pixel, tColor);
-
+                    pixel.mixColor(tColor.getRed(), tColor.getGreen(), tColor.getBlue());
+                    pixel.incrementCounter();
                 }
             }
         }
         return canvas;
 
-    }
-
-    protected void processPixel(Pixel pixel, Color tColor) {
-        pixel.setRed((pixel.getRed() + tColor.getRed()) / 2);
-        pixel.setGreen((pixel.getGreen() + tColor.getGreen()) / 2);
-        pixel.setBlue((pixel.getBlue() + tColor.getBlue()) / 2);
-        pixel.incrementCounter();
     }
 
     protected static Point rotate(Point point, double rad) {
