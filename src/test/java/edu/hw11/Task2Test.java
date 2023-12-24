@@ -1,17 +1,12 @@
 package edu.hw11;
 
-import java.lang.reflect.InvocationTargetException;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.agent.ByteBuddyAgent;
-import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.dynamic.loading.ClassReloadingStrategy;
 import net.bytebuddy.implementation.MethodCall;
-import net.bytebuddy.matcher.ElementMatcher;
 import net.bytebuddy.matcher.ElementMatchers;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 public class Task2Test {
@@ -27,13 +22,15 @@ public class Task2Test {
     }
 
     @Test
-    @Disabled
     void shouldChangeSumToMultiply()
         throws NoSuchMethodException {
         //given
         try (var unloaded = new ByteBuddy()
             .redefine(ArithmeticUtils.class)
-            .method(ElementMatchers.named("sumInts"))
+            .method(ElementMatchers.named("sumInts")
+                .and(ElementMatchers.takesArguments(int.class, int.class))
+                .and(ElementMatchers.returns(int.class))
+            )
             //.intercept(MethodDelegation.to(new SumToMultiplyInterceptor()))
             .intercept(MethodCall.invoke(
                     SumToMultiplyInterceptor.class.getMethod("multiply", int.class, int.class)

@@ -193,6 +193,9 @@
                             </goals>
                         </execution>
                     </executions>
+                    <configuration>
+                        <excludes>edu.hw11.ArithmeticUtils</excludes>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>

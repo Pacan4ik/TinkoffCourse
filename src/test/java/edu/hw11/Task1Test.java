@@ -16,7 +16,7 @@ public class Task1Test {
         try (
             var unloaded = new ByteBuddy()
                 .subclass(Object.class)
-                .method(ElementMatchers.named("toString"))
+                .method(ElementMatchers.isToString())
                 .intercept(FixedValue.value("Hello, ByteBuddy"))
                 .make()
         ) {
